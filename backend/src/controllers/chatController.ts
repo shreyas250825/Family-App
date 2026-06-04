@@ -5,7 +5,7 @@ export const getConversations = async (req: Request, res: Response) => {
   const { data: conversations, error } = await supabase
     .from('conversation_participants')
     .select('conversation_id, conversations(*)')
-    .eq('user_id', req.user.id);
+    .eq('user_id', req.user!.id);
     
   if (error) return res.status(400).json({ error });
   res.json(conversations.map(c => c.conversations));
@@ -37,7 +37,7 @@ export const sendMessage = async (req: Request, res: Response) => {
   
   const { data: message, error } = await supabase
     .from('messages')
-    .insert({ conversation_id: conversationId, sender_id: req.user.id, content })
+    .insert({ conversation_id: conversationId, sender_id: req.user!.id, content })
     .select()
     .single();
     

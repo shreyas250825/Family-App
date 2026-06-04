@@ -3,7 +3,7 @@ import { supabase } from '../config/supabase';
 
 export const getFamilyRequests = async (req: Request, res: Response) => {
   const { familyId } = req.params;
-  const userId = req.user.id;
+  const userId = req.user!.id;
   
   // Verify admin
   const { data: member } = await supabase
@@ -30,7 +30,7 @@ export const getFamilyRequests = async (req: Request, res: Response) => {
 export const handleFamilyRequest = async (req: Request, res: Response) => {
   const { familyId, requestId } = req.params;
   const { status } = req.body; // 'approved' or 'rejected'
-  const userId = req.user.id;
+  const userId = req.user!.id;
   
   // Verify admin
   const { data: member } = await supabase
@@ -71,7 +71,7 @@ export const handleFamilyRequest = async (req: Request, res: Response) => {
 
 export const removeMember = async (req: Request, res: Response) => {
   const { familyId, userId } = req.params;
-  const adminId = req.user.id;
+  const adminId = req.user!.id;
   
   // Verify admin
   const { data: member } = await supabase
@@ -106,7 +106,7 @@ export const removeMember = async (req: Request, res: Response) => {
 
 export const getActivityLogs = async (req: Request, res: Response) => {
   const { familyId } = req.params;
-  const userId = req.user.id;
+  const userId = req.user!.id;
   
   // Verify admin
   const { data: member } = await supabase

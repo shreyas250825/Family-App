@@ -2,7 +2,7 @@ import { Request, Response } from 'express';
 import { supabase } from '../config/supabase';
 
 export const getNotifications = async (req: Request, res: Response) => {
-  const userId = req.user.id;
+  const userId = req.user!.id;
   
   const { data: notifications, error } = await supabase
     .from('notifications')
@@ -24,7 +24,9 @@ export const getNotifications = async (req: Request, res: Response) => {
 
 export const markAsRead = async (req: Request, res: Response) => {
   const { notificationId } = req.params;
-  const userId = req.user.id;
+  const userId = req.user!.id;
+  
+
   
   const { error } = await supabase
     .from('notifications')
@@ -37,7 +39,8 @@ export const markAsRead = async (req: Request, res: Response) => {
 };
 
 export const markAllAsRead = async (req: Request, res: Response) => {
-  const userId = req.user.id;
+  const userId = req.user!.id;
+
   
   const { error } = await supabase
     .from('notifications')

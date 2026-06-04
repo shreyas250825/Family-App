@@ -5,7 +5,7 @@ import { uploadMedia } from '../utils/storage';
 export const createPost = async (req: Request, res: Response) => {
   const { familyId } = req.params;
   const { content } = req.body;
-  const userId = req.user.id;
+  const userId = req.user!.id;
   
   // Verify membership
   const { data: member } = await supabase

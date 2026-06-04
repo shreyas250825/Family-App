@@ -1,6 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import { supabase } from '../config/supabase';
 
+declare global {
+  namespace Express {
+    interface Request {
+      user: { id: string };
+    }
+  }
+}
+
+
 export const authenticate = async (req: Request, res: Response, next: NextFunction) => {
   const token = req.headers.authorization?.split(' ')[1];
   if (!token) {
@@ -12,6 +21,7 @@ export const authenticate = async (req: Request, res: Response, next: NextFuncti
     return res.status(401).json({ error: { code: 'INVALID_TOKEN', message: 'Invalid or expired token' } });
   }
 
-  (req as any).user = user; // extend Request type
+  req.user = user;
   next();
 };
+

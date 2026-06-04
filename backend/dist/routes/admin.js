@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const auth_1 = require("../middleware/auth");
+const adminController_1 = require("../controllers/adminController");
+const router = (0, express_1.Router)();
+router.use(auth_1.authenticate);
+router.get('/families/:familyId/requests', adminController_1.getFamilyRequests);
+router.put('/families/:familyId/requests/:requestId', adminController_1.handleFamilyRequest);
+router.delete('/families/:familyId/members/:userId', adminController_1.removeMember);
+router.get('/families/:familyId/activity-logs', adminController_1.getActivityLogs);
+exports.default = router;

@@ -1,0 +1,12 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = require("express");
+const auth_1 = require("../middleware/auth");
+const familyController_1 = require("../controllers/familyController");
+const router = (0, express_1.Router)();
+router.use(auth_1.authenticate);
+router.post('/', familyController_1.createFamily);
+router.get('/', familyController_1.getFamilies);
+router.get('/:familyId', familyController_1.getFamilyById);
+router.post('/join', familyController_1.joinFamily);
+exports.default = router;

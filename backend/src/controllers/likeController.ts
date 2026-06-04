@@ -3,7 +3,7 @@ import { supabase } from '../config/supabase';
 
 export const toggleLike = async (req: Request, res: Response) => {
   const { postId } = req.params;
-  const userId = req.user.id;
+  const userId = req.user!.id;
   
   // Check if already liked
   const { data: existing } = await supabase

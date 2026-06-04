@@ -4,9 +4,10 @@ import { supabase } from '../config/supabase';
 export const createComment = async (req: Request, res: Response) => {
   const { postId } = req.params;
   const { content } = req.body;
-  const userId = req.user.id;
+  const userId = req.user!.id;
   
   // Verify post exists and user is family member
+
   const { data: post } = await supabase
     .from('posts')
     .select('family_id')
@@ -35,7 +36,7 @@ export const createComment = async (req: Request, res: Response) => {
 
 export const deleteComment = async (req: Request, res: Response) => {
   const { commentId } = req.params;
-  const userId = req.user.id;
+  const userId = req.user!.id;
   
   const { data: comment } = await supabase
     .from('comments')

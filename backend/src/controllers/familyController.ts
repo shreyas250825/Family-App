@@ -4,9 +4,10 @@ import { randomBytes } from 'crypto';
 
 export const createFamily = async (req: Request, res: Response) => {
   const { name, is_public_feed } = req.body;
-  const userId = req.user.id;
+  const userId = req.user!.id;
   
   const invite_code = randomBytes(3).toString('hex').toUpperCase(); // 6 chars
+
   
   const { data: family, error } = await supabase
     .from('families')
@@ -30,7 +31,8 @@ export const getFamilies = async (req: Request, res: Response) => {
   const { data: families, error } = await supabase
     .from('family_members')
     .select('family_id, families(*)')
-    .eq('user_id', req.user.id);
+.eq('user_id', req.user!.id);
+
     
   if (error) return res.status(400).json({ error });
   res.json(families.map(f => f.families));
@@ -50,7 +52,8 @@ export const getFamilyById = async (req: Request, res: Response) => {
 
 export const joinFamily = async (req: Request, res: Response) => {
   const { invite_code } = req.body;
-  const userId = req.user.id;
+  const userId = req.user!.id;
+
   
   const { data: family, error } = await supabase
     .from('families')
