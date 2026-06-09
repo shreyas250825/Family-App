@@ -1,7 +1,8 @@
 import { create } from 'zustand';
-import * as SecureStore from 'expo-secure-store';
 import api from '../services/api';
 import { User } from '../types';
+import { secureStore } from '../utils/secureStore';
+
 
 interface AuthState {
   user: User | null;
@@ -18,18 +19,24 @@ export const useAuthStore = create<AuthState>((set) => ({
   isLoading: true,
   signIn: async (email, password) => {
     const { data } = await api.post('/auth/login', { email, password });
-    await SecureStore.setItemAsync('session', JSON.stringify(data.session));
-    set({ user: data.user, session: data.session });
+    // Backend returns Supabase session object: { access_token, refresh_token, ... }
+    await secureStore.setItemAsync('session', JSON.stringify(data.session));
+
+    // Session only contains token fields; user is fetched via /api/auth/profile when needed.
+    set({ user: data.user ?? null, session: data.session });
   },
   signOut: async () => {
-    await SecureStore.deleteItemAsync('session');
+    await secureStore.deleteItemAsync('session');
+
     set({ user: null, session: null });
   },
   hydrate: async () => {
-    const sessionStr = await SecureStore.getItemAsync('session');
+    const sessionStr = await secureStore.getItemAsync('session');
+
     if (sessionStr) {
       const session = JSON.parse(sessionStr);
-      set({ user: session.user, session, isLoading: false });
+      // Keep user from API flow; session object is token-only (no user).
+      set({ user: session.user ?? null, session, isLoading: false });
     } else {
       set({ isLoading: false });
     }
