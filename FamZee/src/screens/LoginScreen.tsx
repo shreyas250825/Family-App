@@ -1,85 +1,124 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  Alert,
+  TouchableOpacity,
+} from 'react-native';
 import { useAuthStore } from '../store/authStore';
+import { getApiErrorMessage } from '../services/api';
+import Button from '../components/Button';
+import Input from '../components/Input';
+import { COLORS, FONT_SIZES, SPACING } from '../utils/constants';
 
 export default function LoginScreen({ navigation }: any) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
   const signIn = useAuthStore((state) => state.signIn);
 
   const handleLogin = async () => {
+    if (!email.trim() || !password.trim()) {
+      Alert.alert('Missing fields', 'Please enter your email and password.');
+      return;
+    }
+    setLoading(true);
     try {
-      await signIn(email, password);
-    } catch (err) {
-      Alert.alert('Error', 'Invalid credentials');
+      await signIn(email.trim(), password);
+    } catch (error) {
+      Alert.alert('Sign in failed', getApiErrorMessage(error, 'Invalid credentials'));
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Login to FamZee</Text>
-      <TextInput
-        placeholder="Email"
-        value={email}
-        onChangeText={setEmail}
-        style={styles.input}
-        autoCapitalize="none"
-      />
-      <TextInput
-        placeholder="Password"
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-        style={styles.input}
-      />
-      <TouchableOpacity onPress={handleLogin} style={styles.button}>
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
-      <TouchableOpacity onPress={() => navigation.navigate('Register')} style={styles.link}>
-        <Text style={styles.linkText}>Don't have an account? Register</Text>
-      </TouchableOpacity>
-    </View>
+    <KeyboardAvoidingView
+      style={styles.flex}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
+      <ScrollView contentContainerStyle={styles.container} keyboardShouldPersistTaps="handled">
+        <View style={styles.hero}>
+          <Text style={styles.logo}>👨‍👩‍👧</Text>
+          <Text style={styles.brand}>FamZee</Text>
+          <Text style={styles.tagline}>Your family. Your circle. Connected.</Text>
+        </View>
+
+        <View style={styles.card}>
+          <Text style={styles.title}>Welcome back</Text>
+          <Text style={styles.subtitle}>Sign in to your family circle</Text>
+
+          <Input
+            label="Email"
+            placeholder="you@email.com"
+            value={email}
+            onChangeText={setEmail}
+            autoCapitalize="none"
+          />
+          <Input
+            label="Password"
+            placeholder="••••••••"
+            value={password}
+            onChangeText={setPassword}
+            secureTextEntry
+          />
+
+          <Button title="Sign In" onPress={handleLogin} loading={loading} />
+
+          <TouchableOpacity onPress={() => navigation.navigate('Register')} style={styles.link}>
+            <Text style={styles.linkText}>
+              Don't have an account? <Text style={styles.linkBold}>Create one</Text>
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
 
 const styles = StyleSheet.create({
+  flex: { flex: 1, backgroundColor: COLORS.background },
   container: {
-    flex: 1,
+    flexGrow: 1,
+    padding: SPACING.lg,
     justifyContent: 'center',
-    padding: 20,
-    backgroundColor: '#F9FAFB',
+  },
+  hero: { alignItems: 'center', marginBottom: SPACING.xl },
+  logo: { fontSize: 52, marginBottom: SPACING.sm },
+  brand: {
+    fontSize: FONT_SIZES['3xl'],
+    fontWeight: '800',
+    color: COLORS.primary,
+  },
+  tagline: {
+    fontSize: FONT_SIZES.sm,
+    color: COLORS.textSecondary,
+    marginTop: SPACING.xs,
+    textAlign: 'center',
+  },
+  card: {
+    backgroundColor: COLORS.surface,
+    borderRadius: 24,
+    padding: SPACING.lg,
+    borderWidth: 1,
+    borderColor: COLORS.border,
   },
   title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-    textAlign: 'center',
-    color: '#111827',
+    fontSize: FONT_SIZES['2xl'],
+    fontWeight: '800',
+    color: COLORS.textPrimary,
+    marginBottom: 4,
   },
-  input: {
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 10,
-    backgroundColor: '#FFFFFF',
+  subtitle: {
+    fontSize: FONT_SIZES.sm,
+    color: COLORS.textSecondary,
+    marginBottom: SPACING.lg,
   },
-  button: {
-    backgroundColor: '#F97316',
-    padding: 12,
-    borderRadius: 8,
-    marginTop: 10,
-  },
-  buttonText: {
-    color: 'white',
-    textAlign: 'center',
-    fontWeight: 'bold',
-  },
-  link: {
-    marginTop: 20,
-    alignItems: 'center',
-  },
-  linkText: {
-    color: '#1E3A8A',
-  },
+  link: { marginTop: SPACING.lg, alignItems: 'center' },
+  linkText: { color: COLORS.textSecondary, fontSize: FONT_SIZES.sm },
+  linkBold: { color: COLORS.primary, fontWeight: '700' },
 });

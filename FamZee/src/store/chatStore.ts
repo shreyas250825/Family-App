@@ -5,7 +5,8 @@ import { Message, Conversation } from '../types';
 interface ChatState {
   conversations: Conversation[];
   messages: Record<string, Message[]>;
-  activeConversationId: string | null;
+  loading: boolean;
+  error: string | null;
   fetchConversations: () => Promise<void>;
   fetchMessages: (conversationId: string) => Promise<void>;
   sendMessage: (conversationId: string, content: string) => Promise<void>;
@@ -15,32 +16,45 @@ interface ChatState {
 export const useChatStore = create<ChatState>((set, get) => ({
   conversations: [],
   messages: {},
-  activeConversationId: null,
+  loading: false,
+  error: null,
+
   fetchConversations: async () => {
-    const { data } = await api.get('/conversations');
-    set({ conversations: data });
+    set({ loading: true, error: null });
+    try {
+      const { data } = await api.get('/chat/conversations');
+      set({ conversations: Array.isArray(data) ? data : [], loading: false });
+    } catch (error) {
+      set({
+        loading: false,
+        error: error instanceof Error ? error.message : 'Failed to load chats',
+      });
+    }
   },
+
   fetchMessages: async (conversationId) => {
-    const { data } = await api.get(`/conversations/${conversationId}/messages`);
+    const { data } = await api.get(`/chat/conversations/${conversationId}/messages`);
     set((state) => ({
-      messages: { ...state.messages, [conversationId]: data }
+      messages: { ...state.messages, [conversationId]: data },
     }));
   },
+
   sendMessage: async (conversationId, content) => {
-    const { data } = await api.post(`/conversations/${conversationId}/messages`, { content });
+    const { data } = await api.post(`/chat/conversations/${conversationId}/messages`, { content });
     set((state) => ({
       messages: {
         ...state.messages,
-        [conversationId]: [...(state.messages[conversationId] || []), data]
-      }
+        [conversationId]: [...(state.messages[conversationId] || []), data],
+      },
     }));
   },
+
   addMessage: (conversationId, message) => {
     set((state) => ({
       messages: {
         ...state.messages,
-        [conversationId]: [...(state.messages[conversationId] || []), message]
-      }
+        [conversationId]: [...(state.messages[conversationId] || []), message],
+      },
     }));
-  }
+  },
 }));

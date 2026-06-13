@@ -1,29 +1,40 @@
 import React from 'react';
-import { TouchableOpacity, Text, StyleSheet, ActivityIndicator } from 'react-native';
+import { TouchableOpacity, Text, StyleSheet, ActivityIndicator, ViewStyle } from 'react-native';
+import { COLORS, FONT_SIZES } from '../utils/constants';
 
 interface ButtonProps {
   title: string;
   onPress: () => void;
   loading?: boolean;
   disabled?: boolean;
-  variant?: 'primary' | 'secondary';
+  variant?: 'primary' | 'secondary' | 'outline' | 'danger';
+  style?: ViewStyle;
 }
 
-export default function Button({ title, onPress, loading, disabled, variant = 'primary' }: ButtonProps) {
+export default function Button({
+  title,
+  onPress,
+  loading,
+  disabled,
+  variant = 'primary',
+  style,
+}: ButtonProps) {
   return (
     <TouchableOpacity
       onPress={onPress}
       disabled={disabled || loading}
       style={[
         styles.button,
-        variant === 'primary' ? styles.primary : styles.secondary,
-        disabled && styles.disabled,
+        styles[variant],
+        (disabled || loading) && styles.disabled,
+        style,
       ]}
+      activeOpacity={0.85}
     >
       {loading ? (
-        <ActivityIndicator color="white" />
+        <ActivityIndicator color={variant === 'outline' ? COLORS.primary : '#fff'} />
       ) : (
-        <Text style={styles.buttonText}>{title}</Text>
+        <Text style={[styles.buttonText, variant === 'outline' && styles.outlineText]}>{title}</Text>
       )}
     </TouchableOpacity>
   );
@@ -31,22 +42,24 @@ export default function Button({ title, onPress, loading, disabled, variant = 'p
 
 const styles = StyleSheet.create({
   button: {
-    padding: 12,
-    borderRadius: 8,
+    paddingVertical: 14,
+    paddingHorizontal: 20,
+    borderRadius: 14,
     alignItems: 'center',
   },
-  primary: {
-    backgroundColor: '#F97316',
+  primary: { backgroundColor: COLORS.primary },
+  secondary: { backgroundColor: COLORS.secondary },
+  outline: {
+    backgroundColor: 'transparent',
+    borderWidth: 1.5,
+    borderColor: COLORS.primary,
   },
-  secondary: {
-    backgroundColor: '#1E3A8A',
-  },
-  disabled: {
-    opacity: 0.5,
-  },
+  danger: { backgroundColor: COLORS.danger },
+  disabled: { opacity: 0.55 },
   buttonText: {
-    color: 'white',
-    fontWeight: 'bold',
-    fontSize: 16,
+    color: '#fff',
+    fontWeight: '700',
+    fontSize: FONT_SIZES.md,
   },
+  outlineText: { color: COLORS.primary },
 });

@@ -5,22 +5,33 @@ import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { useAuthStore } from './src/store/authStore';
 import { useNotificationService } from './src/services/notificationService';
+import { useAppBootstrap } from './src/hooks/useAppBootstrap';
 
-export default function App() {
+function AppContent() {
   const hydrate = useAuthStore((state) => state.hydrate);
   const initNotifications = useNotificationService((state) => state.init);
-  
+
+  useAppBootstrap();
+
   useEffect(() => {
     hydrate();
     initNotifications();
   }, []);
-  
+
+  return (
+    <>
+      <RootNavigator />
+      <StatusBar style="dark" />
+    </>
+  );
+}
+
+export default function App() {
   return (
     <SafeAreaProvider>
       <NavigationContainer>
-        <RootNavigator />
+        <AppContent />
       </NavigationContainer>
-      <StatusBar style="auto" />
     </SafeAreaProvider>
   );
 }

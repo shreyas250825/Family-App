@@ -1,72 +1,101 @@
 import React, { useEffect } from 'react';
-import { View, FlatList, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, FlatList, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useChatStore } from '../store/chatStore';
+import ScreenHeader from '../components/ScreenHeader';
+import EmptyState from '../components/EmptyState';
+import { COLORS, FONT_SIZES, SHADOWS, SPACING } from '../utils/constants';
 
 export default function ChatListScreen({ navigation }: any) {
-  const { conversations, fetchConversations } = useChatStore();
-  
+  const { conversations, loading, error, fetchConversations } = useChatStore();
+
   useEffect(() => {
     fetchConversations();
   }, []);
-  
-  const handleChatPress = (conversationId: string) => {
-    navigation.navigate('ChatRoom', { conversationId });
-  };
-  
+
   return (
     <View style={styles.container}>
-      <FlatList
-        data={conversations}
-        keyExtractor={item => item.id}
-        renderItem={({ item }) => (
-          <TouchableOpacity
-            style={styles.chatItem}
-            onPress={() => handleChatPress(item.id)}
-          >
-            <Text style={styles.chatName}>{item.name || 'Family Chat'}</Text>
-            <Text style={styles.chatDate}>
-              {new Date(item.created_at).toLocaleDateString()}
-            </Text>
-          </TouchableOpacity>
-        )}
-        ListEmptyComponent={
-          <View style={styles.emptyContainer}>
-            <Text style={styles.emptyText}>No conversations yet</Text>
-          </View>
-        }
-      />
+      <ScreenHeader title="Messages" subtitle="Stay connected with family" />
+
+      {loading && conversations.length === 0 ? (
+        <ActivityIndicator size="large" color={COLORS.primary} style={styles.loader} />
+      ) : (
+        <FlatList
+          data={conversations}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.chatItem}
+              onPress={() =>
+                navigation.navigate('ChatRoom', {
+                  conversationId: item.id,
+                  title: item.name || 'Family Chat',
+                })
+              }
+            >
+              <View style={styles.avatar}>
+                <Text style={styles.avatarText}>💬</Text>
+              </View>
+              <View style={styles.chatContent}>
+                <Text style={styles.chatName}>{item.name || 'Family Chat'}</Text>
+                <Text style={styles.chatMeta}>
+                  {item.is_group ? 'Group conversation' : 'Direct message'}
+                </Text>
+              </View>
+              <Text style={styles.chevron}>›</Text>
+            </TouchableOpacity>
+          )}
+          ListEmptyComponent={
+            <EmptyState
+              emoji="💬"
+              title="No conversations yet"
+              description={error || 'Family chats will appear here once your circle is active.'}
+            />
+          }
+        />
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#F9FAFB',
-  },
+  container: { flex: 1, backgroundColor: COLORS.background },
+  loader: { marginTop: SPACING.xl },
   chatItem: {
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: '#E5E7EB',
-    backgroundColor: '#FFFFFF',
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: SPACING.md,
+    marginHorizontal: SPACING.md,
+    marginBottom: SPACING.sm,
+    backgroundColor: COLORS.surface,
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+    ...SHADOWS.soft,
   },
+  avatar: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: COLORS.unread,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: SPACING.sm,
+  },
+  avatarText: { fontSize: 22 },
+  chatContent: { flex: 1 },
   chatName: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#111827',
+    fontSize: FONT_SIZES.md,
+    fontWeight: '700',
+    color: COLORS.textPrimary,
   },
-  chatDate: {
-    fontSize: 12,
-    color: '#6B7280',
+  chatMeta: {
+    fontSize: FONT_SIZES.xs,
+    color: COLORS.textSecondary,
     marginTop: 4,
   },
-  emptyContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  emptyText: {
-    fontSize: 16,
-    color: '#6B7280',
+  chevron: {
+    fontSize: 24,
+    color: COLORS.textMuted,
+    fontWeight: '300',
   },
 });

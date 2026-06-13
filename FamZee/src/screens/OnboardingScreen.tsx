@@ -1,51 +1,65 @@
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import Button from '../components/Button';
+import { COLORS, FONT_SIZES, SPACING } from '../utils/constants';
+
+const SLIDES = [
+  {
+    emoji: '👨‍👩‍👧‍👦',
+    title: 'Connect with Family',
+    description: 'Share memories, photos, and milestones with the people who matter most.',
+  },
+  {
+    emoji: '🔒',
+    title: 'Private & Secure',
+    description: 'Your family circle stays private — only invited members can join.',
+  },
+  {
+    emoji: '💬',
+    title: 'Stay in Touch',
+    description: 'Chat, celebrate birthdays, and never miss a family moment again.',
+  },
+];
 
 export default function OnboardingScreen({ navigation }: any) {
   const [currentIndex, setCurrentIndex] = useState(0);
-
-  const slides = [
-    {
-      title: 'Connect with Family',
-      description: 'Share memories, photos, and moments with your loved ones.',
-    },
-    {
-      title: 'Private & Secure',
-      description: 'Your family data stays private within your family circle.',
-    },
-    {
-      title: 'Stay Connected',
-      description: 'Chat, share events, and never miss a family moment.',
-    },
-  ];
+  const slide = SLIDES[currentIndex];
+  const isLast = currentIndex === SLIDES.length - 1;
 
   const handleNext = () => {
-    if (currentIndex < slides.length - 1) {
-      setCurrentIndex(currentIndex + 1);
-    } else {
+    if (isLast) {
       navigation.navigate('Login');
+    } else {
+      setCurrentIndex(currentIndex + 1);
     }
-  };
-
-  const handleSkip = () => {
-    navigation.navigate('Login');
   };
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity onPress={() => navigation.navigate('Login')} style={styles.skip}>
+        <Text style={styles.skipText}>Skip</Text>
+      </TouchableOpacity>
+
       <View style={styles.content}>
-        <Text style={styles.title}>{slides[currentIndex].title}</Text>
-        <Text style={styles.description}>{slides[currentIndex].description}</Text>
+        <View style={styles.emojiWrap}>
+          <Text style={styles.emoji}>{slide.emoji}</Text>
+        </View>
+        <Text style={styles.title}>{slide.title}</Text>
+        <Text style={styles.description}>{slide.description}</Text>
+
+        <View style={styles.dots}>
+          {SLIDES.map((_, index) => (
+            <View key={index} style={[styles.dot, index === currentIndex && styles.dotActive]} />
+          ))}
+        </View>
       </View>
+
       <View style={styles.footer}>
-        <TouchableOpacity onPress={handleSkip} style={styles.skipButton}>
-          <Text style={styles.skipText}>Skip</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleNext} style={styles.nextButton}>
-          <Text style={styles.nextText}>
-            {currentIndex === slides.length - 1 ? 'Get Started' : 'Next'}
-          </Text>
-        </TouchableOpacity>
+        <Button
+          title={isLast ? 'Get Started' : 'Continue'}
+          onPress={handleNext}
+          style={styles.cta}
+        />
       </View>
     </View>
   );
@@ -54,49 +68,66 @@ export default function OnboardingScreen({ navigation }: any) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
-    padding: 20,
-    backgroundColor: '#F9FAFB',
+    backgroundColor: COLORS.background,
+    paddingHorizontal: SPACING.lg,
+    paddingBottom: SPACING.xl,
+  },
+  skip: {
+    alignSelf: 'flex-end',
+    paddingTop: SPACING.lg,
+    paddingBottom: SPACING.sm,
+  },
+  skipText: {
+    color: COLORS.textSecondary,
+    fontSize: FONT_SIZES.md,
+    fontWeight: '600',
   },
   content: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },
+  emojiWrap: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    backgroundColor: COLORS.surface,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: SPACING.lg,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+  emoji: { fontSize: 56 },
   title: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    marginBottom: 16,
+    fontSize: FONT_SIZES['3xl'],
+    fontWeight: '800',
+    marginBottom: SPACING.sm,
     textAlign: 'center',
-    color: '#111827',
+    color: COLORS.textPrimary,
   },
   description: {
-    fontSize: 16,
+    fontSize: FONT_SIZES.md,
     textAlign: 'center',
-    color: '#6B7280',
-    paddingHorizontal: 20,
+    color: COLORS.textSecondary,
+    lineHeight: 24,
+    paddingHorizontal: SPACING.md,
   },
-  footer: {
+  dots: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingVertical: 20,
+    gap: 8,
+    marginTop: SPACING.xl,
   },
-  skipButton: {
-    padding: 12,
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: COLORS.border,
   },
-  skipText: {
-    color: '#6B7280',
-    fontSize: 16,
+  dotActive: {
+    width: 24,
+    backgroundColor: COLORS.primary,
   },
-  nextButton: {
-    backgroundColor: '#F97316',
-    paddingHorizontal: 32,
-    paddingVertical: 12,
-    borderRadius: 8,
-  },
-  nextText: {
-    color: 'white',
-    fontSize: 16,
-    fontWeight: 'bold',
-  },
+  footer: { paddingTop: SPACING.md },
+  cta: { width: '100%' },
 });
