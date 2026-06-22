@@ -1,143 +1,145 @@
-import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useFamZee } from '../context/FamZeeContext';
 
 export function Login() {
   const navigate = useNavigate();
-  const [email, setEmail] = useState('priya@salian.family');
-  const [password, setPassword] = useState('demo1234');
+  const location = useLocation();
+  const { login, loginWithGoogle, loginWithApple, isAuthenticated, needsOnboarding } = useFamZee();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [oauthLoading, setOauthLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const from = (location.state as { from?: string })?.from || '/dashboard';
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate(needsOnboarding ? '/onboarding' : from, { replace: true });
+    }
+  }, [isAuthenticated, needsOnboarding, from, navigate]);
+
+  if (isAuthenticated) return null;
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
-      navigate('/dashboard');
-    }, 800);
+    setError('');
+    try {
+      await login(email, password);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Sign in failed');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleOAuth = async (provider: 'google' | 'apple') => {
+    setOauthLoading(true);
+    setError('');
+    try {
+      if (provider === 'google') await loginWithGoogle();
+      else await loginWithApple();
+    } catch {
+      setError('Sign in failed. Please try again.');
+    } finally {
+      setOauthLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen flex">
-      {/* Left — branding panel */}
-      <div className="hidden lg:flex lg:w-1/2 relative overflow-hidden">
-        <img
-          src="https://images.unsplash.com/photo-1609220136736-443891a64571?w=1200&h=1400&fit=crop"
-          alt="Family together"
-          className="absolute inset-0 w-full h-full object-cover"
-        />
-        <div className="absolute inset-0 bg-gradient-to-br from-brand-primary/90 via-brand-secondary/80 to-brand-primary/70" />
-        <div className="relative z-10 flex flex-col justify-between p-12 text-white w-full">
-          <Link to="/" className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-xl bg-white/20 backdrop-blur flex items-center justify-center">
-              <span className="text-2xl">👨‍👩‍👧</span>
-            </div>
-            <span className="text-2xl font-bold">FamZee</span>
-          </Link>
-
-          <div>
-            <h1 className="text-4xl font-bold mb-4 leading-tight">
-              Welcome back to your family circle
-            </h1>
-            <p className="text-white/80 text-lg leading-relaxed max-w-md">
-              Reconnect with the people who matter most. Your memories, events, and conversations are waiting.
-            </p>
-
-            <div className="mt-10 flex items-center gap-4">
-              <div className="flex -space-x-3">
-                {[11, 12, 13, 14].map((i) => (
-                  <img key={i} src={`https://i.pravatar.cc/48?img=${i}`} alt="" className="w-10 h-10 rounded-full border-2 border-white/30" />
-                ))}
-              </div>
-              <p className="text-sm text-white/70">Join 50,000+ connected families</p>
-            </div>
-          </div>
-
-          <p className="text-sm text-white/50">© 2026 FamZee. Demo mode — no authentication required.</p>
+    <div className="min-h-screen grid lg:grid-cols-2">
+      <div className="hidden lg:flex flex-col justify-between p-12 bg-neutral-900 text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-ig-gradient opacity-30" />
+        <Link to="/" className="relative text-2xl font-bold bg-ig-gradient bg-clip-text text-transparent">
+          FamZee
+        </Link>
+        <div className="relative">
+          <h1 className="text-4xl font-bold leading-tight mb-4">Welcome back</h1>
+          <p className="text-neutral-300 text-lg max-w-sm">
+            Your family's private space for photos, events, and conversations.
+          </p>
         </div>
+        <p className="relative text-sm text-neutral-500">© FamZee</p>
       </div>
 
-      {/* Right — login form */}
-      <div className="flex-1 flex items-center justify-center p-6 bg-gradient-hero">
-        <div className="w-full max-w-md animate-slide-up">
-          <div className="lg:hidden flex items-center gap-3 mb-8 justify-center">
-            <div className="w-10 h-10 rounded-xl bg-gradient-brand flex items-center justify-center">
-              <span className="text-lg">👨‍👩‍👧</span>
-            </div>
-            <span className="text-xl font-bold text-gradient">FamZee</span>
+      <div className="flex items-center justify-center p-6 bg-white">
+        <div className="w-full max-w-sm">
+          <div className="lg:hidden text-center mb-8">
+            <Link to="/" className="text-2xl font-bold bg-ig-gradient bg-clip-text text-transparent">FamZee</Link>
           </div>
 
-          <div className="glass-dark rounded-3xl p-8 sm:p-10 shadow-card" data-tour="login-form">
-            <div className="text-center mb-8">
-              <h2 className="text-2xl font-bold text-slate-800 mb-2">Sign in to FamZee</h2>
-              <p className="text-slate-500">Enter any credentials to explore the demo</p>
-            </div>
+          <h2 className="text-2xl font-bold text-neutral-900 mb-2">Log in</h2>
+          <p className="text-neutral-500 text-sm mb-8">Enter your account details to continue.</p>
 
-            <form onSubmit={handleSubmit} className="space-y-5">
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-slate-700 mb-2">Email</label>
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-white/80 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary transition-all"
-                  placeholder="you@family.com"
-                />
-              </div>
+          {error && (
+            <div className="mb-4 p-3 rounded-lg bg-red-50 text-red-600 text-sm border border-red-100">{error}</div>
+          )}
 
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-slate-700 mb-2">Password</label>
-                <input
-                  id="password"
-                  type="password"
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)}
-                  className="w-full px-4 py-3.5 rounded-xl border border-slate-200 bg-white/80 text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-primary/30 focus:border-brand-primary transition-all"
-                  placeholder="••••••••"
-                />
-              </div>
+          <form onSubmit={handleSubmit} className="space-y-4">
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full px-4 py-3 rounded-lg border border-neutral-200 bg-neutral-50 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-300"
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              className="w-full px-4 py-3 rounded-lg border border-neutral-200 bg-neutral-50 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900/10 focus:border-neutral-300"
+            />
+            <button
+              type="submit"
+              disabled={loading || oauthLoading}
+              className="w-full py-3 bg-neutral-900 text-white rounded-lg font-semibold text-sm hover:bg-neutral-800 disabled:opacity-60 transition-colors"
+            >
+              {loading ? 'Signing in...' : 'Log in'}
+            </button>
+          </form>
 
-              <div className="flex items-center justify-between text-sm">
-                <label className="flex items-center gap-2 text-slate-600 cursor-pointer">
-                  <input type="checkbox" defaultChecked className="rounded border-slate-300 text-brand-primary focus:ring-brand-primary" />
-                  Remember me
-                </label>
-                <a href="#" className="text-brand-primary font-medium hover:underline">Forgot password?</a>
-              </div>
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full py-4 bg-gradient-brand rounded-xl text-white font-semibold shadow-soft hover:shadow-glow hover:scale-[1.02] transition-all disabled:opacity-70 disabled:scale-100"
-              >
-                {loading ? 'Signing in...' : 'Sign In'}
-              </button>
-            </form>
-
-            <div className="relative my-8">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-slate-200" />
-              </div>
-              <div className="relative flex justify-center text-sm">
-                <span className="px-4 bg-white text-slate-500">or continue with</span>
-              </div>
-            </div>
-
-            <div className="grid grid-cols-2 gap-3">
-              <button className="flex items-center justify-center gap-2 py-3 rounded-xl border border-slate-200 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors">
-                <span>🔵</span> Google
-              </button>
-              <button className="flex items-center justify-center gap-2 py-3 rounded-xl border border-slate-200 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors">
-                <span>📱</span> Apple
-              </button>
-            </div>
-
-            <p className="text-center text-sm text-slate-500 mt-8">
-              Don't have an account?{' '}
-              <Link to="/dashboard" className="text-brand-primary font-semibold hover:underline">
-                Try the live demo
-              </Link>
-            </p>
+          <div className="relative my-6">
+            <div className="absolute inset-0 flex items-center"><div className="w-full border-t border-neutral-200" /></div>
+            <div className="relative flex justify-center text-xs"><span className="px-3 bg-white text-neutral-400 uppercase tracking-wide">or</span></div>
           </div>
+
+          <div className="space-y-3">
+            <button
+              type="button"
+              onClick={() => handleOAuth('google')}
+              disabled={loading || oauthLoading}
+              className="w-full flex items-center justify-center gap-3 py-3 rounded-lg border border-neutral-200 text-sm font-medium hover:bg-neutral-50 disabled:opacity-60"
+            >
+              <svg className="w-5 h-5" viewBox="0 0 24 24">
+                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+              </svg>
+              Continue with Google
+            </button>
+            <button
+              type="button"
+              onClick={() => handleOAuth('apple')}
+              disabled={loading || oauthLoading}
+              className="w-full flex items-center justify-center gap-3 py-3 rounded-lg border border-neutral-200 text-sm font-medium hover:bg-neutral-50 disabled:opacity-60"
+            >
+              <svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M17.05 20.28c-.98.95-2.05.8-3.08.35-1.09-.46-2.09-.48-3.24 0-1.44.62-2.2.44-3.06-.35C2.79 15.25 3.51 7.59 9.05 7.31c1.35.07 2.29.74 3.08.8 1.18-.24 2.31-.93 3.57-.84 1.51.12 2.65.72 3.4 1.8-3.12 1.87-2.38 5.98.48 7.13-.57 1.5-1.31 2.99-2.54 4.09zM12.03 7.25c-.15-2.23 1.66-4.07 3.74-4.25.29 2.58-2.34 4.5-3.74 4.25z"/>
+              </svg>
+              Continue with Apple
+            </button>
+          </div>
+
+          <p className="text-center text-sm text-neutral-500 mt-8">
+            Don't have an account?{' '}
+            <Link to="/register" className="text-neutral-900 font-semibold hover:underline">Sign up</Link>
+          </p>
         </div>
       </div>
     </div>

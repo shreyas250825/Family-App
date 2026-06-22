@@ -8,28 +8,25 @@ export default {
     extend: {
       colors: {
         brand: {
-          primary: '#4F46E5',
-          secondary: '#8B5CF6',
-          accent: '#F59E0B',
+          primary: '#262626',
+          secondary: '#833AB4',
+          accent: '#E1306C',
         },
         surface: {
           DEFAULT: '#FFFFFF',
-          muted: '#F8FAFC',
-          card: 'rgba(255, 255, 255, 0.85)',
+          muted: '#FAFAFA',
+          card: '#FFFFFF',
         },
       },
       backgroundImage: {
-        'gradient-brand': 'linear-gradient(135deg, #4F46E5 0%, #8B5CF6 100%)',
-        'gradient-warm': 'linear-gradient(135deg, #FEF3C7 0%, #FDE68A 20%, #E0E7FF 60%, #EDE9FE 100%)',
-        'gradient-hero': 'linear-gradient(180deg, #F8FAFF 0%, #F5F3FF 40%, #FFFBEB 100%)',
+        'ig-gradient': 'linear-gradient(45deg, #405DE6, #5851DB, #833AB4, #C13584, #E1306C, #FD1D1D)',
+        'gradient-brand': 'linear-gradient(45deg, #405DE6, #833AB4, #C13584, #E1306C)',
+        'gradient-hero': 'linear-gradient(180deg, #FFFFFF 0%, #FAFAFA 100%)',
       },
       boxShadow: {
-        soft: '0 4px 24px -4px rgba(79, 70, 229, 0.08)',
-        card: '0 8px 32px -8px rgba(15, 23, 42, 0.08)',
-        glow: '0 0 40px -10px rgba(139, 92, 246, 0.3)',
-      },
-      backdropBlur: {
-        xs: '2px',
+        soft: '0 4px 24px -4px rgba(0, 0, 0, 0.06)',
+        card: '0 8px 32px -8px rgba(0, 0, 0, 0.08)',
+        glow: '0 0 40px -10px rgba(225, 48, 108, 0.25)',
       },
       animation: {
         'fade-in': 'fadeIn 0.5s ease-out forwards',

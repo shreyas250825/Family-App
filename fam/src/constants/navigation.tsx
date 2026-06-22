@@ -81,8 +81,8 @@ export const APP_NAV_ITEMS: NavItem[] = [
   { path: '/events', label: 'Events', icon: CalendarIcon, tourId: 'nav-events' },
   { path: '/albums', label: 'Albums', icon: AlbumIcon, tourId: 'nav-albums' },
   { path: '/messages', label: 'Messages', icon: MessageIcon, tourId: 'nav-messages' },
-  { path: '/dashboard', label: 'Notifications', icon: BellIcon, badge: 5 },
-  { path: '/dashboard', label: 'Settings', icon: SettingsIcon },
+  { path: '/notifications', label: 'Notifications', icon: BellIcon, badge: 0, tourId: 'nav-notifications' },
+  { path: '/settings', label: 'Settings', icon: SettingsIcon, tourId: 'nav-settings' },
 ];
 
 export const FAMILY_NAV_ITEM: NavItem = {
@@ -101,15 +101,15 @@ export const MOBILE_NAV_ITEMS: NavItem[] = [
 ];
 
 export function isNavActive(pathname: string, item: NavItem, label?: string): boolean {
-  if (label === 'Home' || label === 'Family Feed') {
-    return pathname === '/dashboard';
-  }
+  if (label === 'Home' || label === 'Family Feed') return pathname === '/dashboard';
+  if (label === 'Notifications') return pathname === '/notifications';
+  if (label === 'Settings') return pathname === '/settings';
   return pathname === item.path;
 }
 
 export function getNavHref(item: NavItem): string {
-  if (['Family Feed', 'Home', 'Notifications', 'Settings'].includes(item.label)) {
-    return '/dashboard';
-  }
+  if (item.label === 'Notifications') return '/notifications';
+  if (item.label === 'Settings') return '/settings';
+  if (['Family Feed', 'Home'].includes(item.label)) return '/dashboard';
   return item.path;
 }

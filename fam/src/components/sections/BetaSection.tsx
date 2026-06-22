@@ -32,7 +32,7 @@ export function BetaSection() {
               Create Your Family Circle
             </Link>
             <Link
-              to="/dashboard"
+              to="/login"
               className="px-10 py-4 glass rounded-xl text-slate-700 font-semibold border border-slate-200/60 hover:shadow-card transition-all"
             >
               View Live Demo

@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { CURRENT_USER } from '../../constants/mockData';
+import { useFamZee } from '../../context/FamZeeContext';
 import {
   APP_NAV_ITEMS,
   FAMILY_NAV_ITEM,
@@ -17,6 +17,8 @@ interface AppLayoutProps {
 export function AppLayout({ children, rightPanel, title }: AppLayoutProps) {
   const location = useLocation();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { user, data } = useFamZee();
+  const unreadCount = data.notifications.filter((n) => !n.isRead).length;
 
   const closeMenu = () => setMenuOpen(false);
 
@@ -63,6 +65,7 @@ export function AppLayout({ children, rightPanel, title }: AppLayoutProps) {
               item={item}
               pathname={location.pathname}
               onNavigate={closeMenu}
+              badge={item.label === 'Notifications' ? unreadCount : item.badge}
             />
           ))}
           <NavLink item={FAMILY_NAV_ITEM} pathname={location.pathname} onNavigate={closeMenu} className="mt-4" />
@@ -70,10 +73,10 @@ export function AppLayout({ children, rightPanel, title }: AppLayoutProps) {
 
         <div className="p-4 border-t border-slate-100">
           <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50/80">
-            <img src={CURRENT_USER.avatar} alt={CURRENT_USER.name} className="w-10 h-10 rounded-full object-cover ring-2 ring-brand-primary/20" />
+            <img src={user?.avatar} alt={user?.name} className="w-10 h-10 rounded-full object-cover ring-2 ring-brand-primary/20" />
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-slate-800 truncate">{CURRENT_USER.name}</p>
-              <p className="text-xs text-slate-500 truncate">{CURRENT_USER.role}</p>
+              <p className="text-sm font-semibold text-slate-800 truncate">{user?.name}</p>
+              <p className="text-xs text-slate-500 truncate">{user?.role}</p>
             </div>
           </div>
         </div>
@@ -93,7 +96,7 @@ export function AppLayout({ children, rightPanel, title }: AppLayoutProps) {
 
           <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
             {APP_NAV_ITEMS.map((item) => (
-              <NavLink key={item.label} item={item} pathname={location.pathname} />
+              <NavLink key={item.label} item={item} pathname={location.pathname} badge={item.label === 'Notifications' ? unreadCount : item.badge} />
             ))}
             <NavLink item={FAMILY_NAV_ITEM} pathname={location.pathname} className="mt-4" highlight="secondary" />
           </nav>
@@ -101,12 +104,12 @@ export function AppLayout({ children, rightPanel, title }: AppLayoutProps) {
           <div className="p-4 border-t border-slate-100">
             <div className="flex items-center gap-3 p-3 rounded-xl bg-slate-50/80">
               <div className="relative">
-                <img src={CURRENT_USER.avatar} alt={CURRENT_USER.name} className="w-10 h-10 rounded-full object-cover ring-2 ring-brand-primary/20" />
+                <img src={user?.avatar} alt={user?.name} className="w-10 h-10 rounded-full object-cover ring-2 ring-brand-primary/20" />
                 <span className="absolute bottom-0 right-0 w-3 h-3 bg-emerald-500 border-2 border-white rounded-full" />
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm font-semibold text-slate-800 truncate">{CURRENT_USER.name}</p>
-                <p className="text-xs text-slate-500 truncate">{CURRENT_USER.role}</p>
+                <p className="text-sm font-semibold text-slate-800 truncate">{user?.name}</p>
+                <p className="text-xs text-slate-500 truncate">{user?.role}</p>
               </div>
             </div>
           </div>
@@ -170,16 +173,19 @@ function NavLink({
   onNavigate,
   className = '',
   highlight = 'primary',
+  badge,
 }: {
   item: (typeof APP_NAV_ITEMS)[number] | typeof FAMILY_NAV_ITEM;
   pathname: string;
   onNavigate?: () => void;
   className?: string;
   highlight?: 'primary' | 'secondary';
+  badge?: number;
 }) {
   const Icon = item.icon;
   const active = isNavActive(pathname, item, item.label);
   const href = getNavHref(item);
+  const badgeCount = badge ?? item.badge;
 
   const activeClass =
     highlight === 'secondary'
@@ -197,11 +203,11 @@ function NavLink({
     >
       <Icon className="w-5 h-5" />
       <span className="flex-1">{item.label}</span>
-      {item.badge && (
+      {badgeCount ? (
         <span className="px-2 py-0.5 text-xs font-semibold bg-brand-accent text-white rounded-full">
-          {item.badge}
+          {badgeCount > 9 ? '9+' : badgeCount}
         </span>
-      )}
+      ) : null}
     </Link>
   );
 }

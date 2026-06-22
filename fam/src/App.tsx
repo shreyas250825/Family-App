@@ -1,68 +1,62 @@
 import { Routes, Route } from 'react-router-dom';
 import { Navbar } from './components/ui/Navbar';
 import { HeroSection } from './components/sections/HeroSection';
-import { ScrollAnimationSection } from './components/sections/ScrollAnimationSection';
-import { ProductSection } from './components/sections/ProductSection';
-import { BetaSection } from './components/sections/BetaSection';
+import { FeaturesSection } from './components/sections/FeaturesSection';
+import { ShowcaseSection } from './components/sections/ShowcaseSection';
+import { CTASection } from './components/sections/CTASection';
 import { Footer } from './components/sections/Footer';
 import { PageTransition } from './components/ui/PageTransition';
-import { DemoTour, DemoTourLauncher } from './components/ui/DemoTour';
-import { DemoTourProvider, useTourAutoPrompt } from './context/DemoTourContext';
+import { FamZeeProvider } from './context/FamZeeContext';
+import { ProtectedRoute } from './components/ProtectedRoute';
 import { Login } from './pages/Login';
+import { Register } from './pages/Register';
+import { Onboarding } from './pages/Onboarding';
 import { Dashboard } from './pages/Dashboard';
 import { FamilyProfile } from './pages/FamilyProfile';
 import { Events } from './pages/Events';
 import { Albums } from './pages/Albums';
 import { Messages } from './pages/Messages';
+import { Notifications } from './pages/Notifications';
+import { Settings } from './pages/Settings';
 
 function LandingPage() {
-  const handleCTAClick = (action: 'beta' | 'learn') => {
-    if (action === 'beta') {
-      document.querySelector('#cta')?.scrollIntoView({ behavior: 'smooth' });
-    } else {
-      document.querySelector('#features')?.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
-
   return (
-    <div className="relative min-h-screen bg-gradient-hero">
+    <div className="min-h-screen bg-white text-neutral-900">
       <Navbar />
-      <HeroSection onCTAClick={handleCTAClick} />
-      <ScrollAnimationSection />
-      <ProductSection />
-      <BetaSection />
+      <HeroSection />
+      <FeaturesSection />
+      <ShowcaseSection />
+      <CTASection />
       <Footer />
     </div>
   );
 }
 
 function AppRoutes() {
-  useTourAutoPrompt();
-
   return (
-    <>
-      <PageTransition>
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/family" element={<FamilyProfile />} />
-          <Route path="/events" element={<Events />} />
-          <Route path="/albums" element={<Albums />} />
-          <Route path="/messages" element={<Messages />} />
-        </Routes>
-      </PageTransition>
-      <DemoTour />
-      <DemoTourLauncher />
-    </>
+    <PageTransition>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/register" element={<Register />} />
+        <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
+        <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+        <Route path="/family" element={<ProtectedRoute><FamilyProfile /></ProtectedRoute>} />
+        <Route path="/events" element={<ProtectedRoute><Events /></ProtectedRoute>} />
+        <Route path="/albums" element={<ProtectedRoute><Albums /></ProtectedRoute>} />
+        <Route path="/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
+        <Route path="/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+        <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+      </Routes>
+    </PageTransition>
   );
 }
 
 function App() {
   return (
-    <DemoTourProvider>
+    <FamZeeProvider>
       <AppRoutes />
-    </DemoTourProvider>
+    </FamZeeProvider>
   );
 }
 
