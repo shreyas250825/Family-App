@@ -1,26 +1,32 @@
 import { Link } from 'react-router-dom';
-import { GuidedWalkthrough, HeroProductFrame } from './tour/GuidedDemo';
+import { FamZeeLogo } from '../brand/FamZeeLogo';
+import { HeroSection } from './HeroSection';
+import { GuidedWalkthrough } from './tour/GuidedDemo';
 import { MessagingDemo, ActivityTimeline, DashboardReveal } from './tour/GuidedSections';
 import { LiveProductShowcase } from './LiveProductShowcase';
 import { MobileProductTour } from './tour/MobileTour';
 
 function LandingNav() {
   return (
-    <header className="mx-auto flex h-14 max-w-[1300px] items-center justify-between px-5 sm:h-16 sm:px-8">
-      <Link to="/" className="text-sm font-medium text-stone-200">FamZee</Link>
-      <nav className="hidden items-center gap-6 md:flex">
-        <a href="#how-it-works" className="text-sm text-stone-500 hover:text-stone-300">How it works</a>
-        <a href="#explore" className="text-sm text-stone-500 hover:text-stone-300">See it in action</a>
-      </nav>
-      <div className="hidden items-center gap-4 md:flex">
-        <Link to="/login" className="text-sm text-stone-400 hover:text-stone-200">Log in</Link>
-        <Link to="/login?demo=1" className="rounded-lg bg-stone-100 px-4 py-2.5 text-sm font-medium text-[#0a0a0a] hover:bg-white">
-          Explore FamZee
+    <header className="sticky top-0 z-50 border-b border-white/[0.04] bg-[#050505]/80 backdrop-blur-md">
+      <div className="mx-auto flex h-14 max-w-[1300px] items-center justify-between px-5 sm:h-16 sm:px-8">
+        <Link to="/" className="transition-opacity hover:opacity-90" aria-label="FamZee home">
+          <FamZeeLogo size={28} />
+        </Link>
+        <nav className="hidden items-center gap-6 md:flex">
+          <a href="#how-it-works" className="text-sm text-stone-500 transition hover:text-stone-300">How it works</a>
+          <a href="#explore" className="text-sm text-stone-500 transition hover:text-stone-300">See it in action</a>
+        </nav>
+        <div className="hidden items-center gap-4 md:flex">
+          <Link to="/login" className="text-sm text-stone-400 transition hover:text-stone-200">Log in</Link>
+          <Link to="/login?demo=1" className="rounded-xl bg-stone-100 px-4 py-2.5 text-sm font-medium text-[#0a0a0a] transition hover:bg-white">
+            Explore FamZee
+          </Link>
+        </div>
+        <Link to="/login?demo=1" className="rounded-xl bg-stone-100 px-3 py-2 text-xs font-medium text-[#0a0a0a] md:hidden">
+          Explore
         </Link>
       </div>
-      <Link to="/login?demo=1" className="rounded-lg bg-stone-100 px-3 py-2 text-xs font-medium text-[#0a0a0a] md:hidden">
-        Explore
-      </Link>
     </header>
   );
 }
@@ -29,30 +35,7 @@ export function StudioLanding() {
   return (
     <div className="min-h-screen overflow-x-hidden bg-[#050505] text-stone-100">
       <LandingNav />
-
-      {/* HERO — introduction first, then large visual */}
-      <section className="mx-auto max-w-[1300px] px-5 pb-8 pt-8 sm:px-8 sm:pb-12 sm:pt-12">
-        <div>
-          <p className="text-[11px] font-medium tracking-[0.3em] text-stone-500">FAMZEE</p>
-          <h1 className="mt-4 max-w-2xl text-[2rem] font-medium leading-[1.12] tracking-tight text-stone-50 sm:text-5xl lg:text-[3.25rem]">
-            Your family&apos;s life,
-            <br />
-            in one private place.
-          </h1>
-          <p className="mt-4 max-w-xl text-base leading-relaxed text-stone-400">
-            Memories, conversations, events and the people you love — together in one private family space.
-          </p>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Link to="/login?demo=1" className="inline-flex min-h-[48px] items-center rounded-lg bg-stone-100 px-6 text-sm font-medium text-[#0a0a0a] hover:bg-white">
-              Explore FamZee
-            </Link>
-            <a href="#how-it-works" className="inline-flex min-h-[48px] items-center rounded-lg border border-white/[0.1] px-6 text-sm text-stone-300 hover:border-white/20">
-              See how it works
-            </a>
-          </div>
-        </div>
-        <HeroProductFrame />
-      </section>
+      <HeroSection />
 
       {/* WHY FAMZEE — brief intro before the demo */}
       <section className="border-t border-white/[0.04] py-14 sm:py-20">
