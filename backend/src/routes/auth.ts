@@ -1,11 +1,4 @@
-import { Router } from 'express';
-import { register, login, getProfile } from '../controllers/authController';
-import { authenticate } from '../middleware/auth';
 
-const router = Router();
-
-router.post('/register', register);
-router.post('/login', login);
-router.get('/profile', authenticate, getProfile);
-
-export default router;
+import { authLimiter } from '../middleware/rateLimiter';
+router.post('/register', authLimiter, register);
+router.post('/login', authLimiter, login);

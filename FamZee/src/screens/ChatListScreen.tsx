@@ -1,19 +1,11 @@
-import React, { useEffect } from 'react';
+
 import { View, FlatList, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { useChatStore } from '../store/chatStore';
 import ScreenHeader from '../components/ScreenHeader';
 import EmptyState from '../components/EmptyState';
 import { COLORS, FONT_SIZES, SHADOWS, SPACING } from '../utils/constants';
-
-export default function ChatListScreen({ navigation }: any) {
   const { conversations, loading, error, fetchConversations } = useChatStore();
 
-  useEffect(() => {
-    fetchConversations();
-  }, []);
 
-  return (
-    <View style={styles.container}>
       <ScreenHeader title="Messages" subtitle="Stay connected with family" />
 
       {loading && conversations.length === 0 ? (
@@ -53,14 +45,8 @@ export default function ChatListScreen({ navigation }: any) {
           }
         />
       )}
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
   loader: { marginTop: SPACING.xl },
-  chatItem: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: SPACING.md,
@@ -83,19 +69,13 @@ const styles = StyleSheet.create({
   },
   avatarText: { fontSize: 22 },
   chatContent: { flex: 1 },
-  chatName: {
     fontSize: FONT_SIZES.md,
     fontWeight: '700',
     color: COLORS.textPrimary,
-  },
   chatMeta: {
     fontSize: FONT_SIZES.xs,
     color: COLORS.textSecondary,
-    marginTop: 4,
-  },
   chevron: {
     fontSize: 24,
     color: COLORS.textMuted,
     fontWeight: '300',
-  },
-});

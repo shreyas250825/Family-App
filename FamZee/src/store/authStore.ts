@@ -1,31 +1,12 @@
-import { create } from 'zustand';
-import api from '../services/api';
-import { User } from '../types';
-import { secureStore } from '../utils/secureStore';
 
-interface AuthState {
-  user: User | null;
-  session: any | null;
-  isLoading: boolean;
-  signIn: (email: string, password: string) => Promise<void>;
-  signOut: () => Promise<void>;
-  hydrate: () => Promise<void>;
   fetchProfile: () => Promise<void>;
-}
-
 export const useAuthStore = create<AuthState>((set, get) => ({
-  user: null,
-  session: null,
-  isLoading: true,
 
   fetchProfile: async () => {
     const { data } = await api.get('/auth/profile');
     set({ user: data });
   },
 
-  signIn: async (email, password) => {
-    const { data } = await api.post('/auth/login', { email, password });
-    await secureStore.setItemAsync('session', JSON.stringify(data.session));
     set({ session: data.session });
 
     try {
@@ -43,12 +24,7 @@ export const useAuthStore = create<AuthState>((set, get) => ({
     }
   },
 
-  signOut: async () => {
-    await secureStore.deleteItemAsync('session');
-    set({ user: null, session: null });
-  },
 
-  hydrate: async () => {
     try {
       const sessionStr = await secureStore.getItemAsync('session');
       if (sessionStr) {
@@ -60,7 +36,4 @@ export const useAuthStore = create<AuthState>((set, get) => ({
       await secureStore.deleteItemAsync('session');
       set({ user: null, session: null });
     } finally {
-      set({ isLoading: false });
-    }
   },
-}));

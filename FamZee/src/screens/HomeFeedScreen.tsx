@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback, useState } from 'react';
 import {
   View,
   FlatList,
@@ -6,26 +6,28 @@ import {
   StyleSheet,
   RefreshControl,
   Text,
+  TouchableOpacity,
 } from 'react-native';
-import PostCard from '../components/PostCard';
 import ScreenHeader from '../components/ScreenHeader';
 import EmptyState from '../components/EmptyState';
+import CreatePostModal from '../components/CreatePostModal';
 import FamilySetupScreen from './FamilySetupScreen';
-import { useFeedStore } from '../store/feedStore';
-import { useFamilyStore } from '../store/familyStore';
 import { COLORS, SPACING } from '../utils/constants';
-
-export default function HomeFeedScreen() {
   const { currentFamilyId, currentFamily, families, loading: familyLoading } = useFamilyStore();
-  const { posts, loading, error, fetchPosts, toggleLike } = useFeedStore();
+  const { posts, loading, creating, error, fetchPosts, createPost, toggleLike } = useFeedStore();
+  const [composerOpen, setComposerOpen] = useState(false);
 
-  useEffect(() => {
     if (currentFamilyId) fetchPosts(currentFamilyId, true);
   }, [currentFamilyId]);
 
   const onRefresh = useCallback(() => {
     if (currentFamilyId) fetchPosts(currentFamilyId, true);
-  }, [currentFamilyId]);
+
+  const handleCreatePost = async (content: string) => {
+    if (!currentFamilyId) return false;
+    const post = await createPost(currentFamilyId, content);
+    return !!post;
+  };
 
   if (familyLoading && families.length === 0) {
     return (
@@ -35,17 +37,9 @@ export default function HomeFeedScreen() {
     );
   }
 
-  if (!currentFamilyId) {
-    return (
-      <View style={styles.container}>
         <ScreenHeader title="FamZee" subtitle="Your family feed" />
         <FamilySetupScreen />
-      </View>
-    );
-  }
 
-  return (
-    <View style={styles.container}>
       <ScreenHeader
         title={currentFamily?.name || 'Family Feed'}
         subtitle={`${posts.length} recent updates`}
@@ -57,8 +51,6 @@ export default function HomeFeedScreen() {
         </View>
       ) : null}
 
-      <FlatList
-        data={posts}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
           <PostCard post={item} onLike={(id) => toggleLike(id).catch(() => undefined)} />
@@ -66,37 +58,41 @@ export default function HomeFeedScreen() {
         refreshControl={
           <RefreshControl refreshing={loading && posts.length > 0} onRefresh={onRefresh} tintColor={COLORS.primary} />
         }
-        onEndReached={() => {
           if (currentFamilyId && !loading) fetchPosts(currentFamilyId);
-        }}
         onEndReachedThreshold={0.4}
-        contentContainerStyle={posts.length === 0 ? styles.emptyList : undefined}
-        ListEmptyComponent={
+        contentContainerStyle={posts.length === 0 ? styles.emptyList : { paddingBottom: 88 }}
           loading ? (
             <ActivityIndicator size="large" color={COLORS.primary} style={styles.loader} />
           ) : (
             <EmptyState
               emoji="📸"
               title="No posts yet"
-              description="Be the first to share a memory with your family."
+              description="Tap + to share your first memory with your family."
             />
           )
         }
       />
-    </View>
-  );
-}
 
-const styles = StyleSheet.create({
+      <TouchableOpacity
+        style={styles.fab}
+        onPress={() => setComposerOpen(true)}
+        accessibilityLabel="Create post"
+      >
+        <Text style={styles.fabText}>+</Text>
+      </TouchableOpacity>
+
+      <CreatePostModal
+        visible={composerOpen}
+        onClose={() => setComposerOpen(false)}
+        onSubmit={handleCreatePost}
+        loading={creating}
   container: { flex: 1, backgroundColor: COLORS.background },
   loaderWrap: {
-    flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
     backgroundColor: COLORS.background,
   },
   loader: { marginTop: SPACING.xl },
-  emptyList: { flexGrow: 1 },
+  emptyList: { flexGrow: 1, paddingBottom: 88 },
   errorBanner: {
     marginHorizontal: SPACING.md,
     marginBottom: SPACING.sm,
@@ -105,4 +101,18 @@ const styles = StyleSheet.create({
     borderRadius: 12,
   },
   errorText: { color: COLORS.danger, fontSize: 13 },
-});
+  fab: {
+    position: 'absolute',
+    right: SPACING.lg,
+    bottom: SPACING.lg,
+    width: 56,
+    height: 56,
+    borderRadius: 28,
+    backgroundColor: COLORS.primary,
+    alignItems: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 6,
+  fabText: { color: '#fff', fontSize: 28, fontWeight: '300', marginTop: -2 },

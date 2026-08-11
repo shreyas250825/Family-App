@@ -1,6 +1,5 @@
-import React, { useEffect } from 'react';
+
 import { View, FlatList, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { useNotificationStore } from '../store/notificationStore';
 import ScreenHeader from '../components/ScreenHeader';
 import EmptyState from '../components/EmptyState';
 import { COLORS, FONT_SIZES, NOTIFICATION_LABELS, SHADOWS, SPACING } from '../utils/constants';
@@ -12,17 +11,10 @@ function formatNotificationBody(type: string, data: any): string {
   if (data?.title) return data.title;
   return NOTIFICATION_LABELS[type] || 'You have a new update';
 }
-
-export default function NotificationsScreen() {
   const { notifications, unreadCount, loading, fetchNotifications, markAsRead, markAllAsRead } =
     useNotificationStore();
 
-  useEffect(() => {
-    fetchNotifications();
-  }, []);
 
-  return (
-    <View style={styles.container}>
       <ScreenHeader
         title="Notifications"
         subtitle={unreadCount > 0 ? `${unreadCount} unread` : 'All caught up'}
@@ -72,15 +64,9 @@ export default function NotificationsScreen() {
           }
         />
       )}
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
   loader: { marginTop: SPACING.xl },
   markAll: { color: COLORS.primary, fontWeight: '700', fontSize: FONT_SIZES.sm },
-  notificationItem: {
     flexDirection: 'row',
     alignItems: 'center',
     padding: SPACING.md,
@@ -104,27 +90,18 @@ const styles = StyleSheet.create({
   },
   icon: { fontSize: 18 },
   content: { flex: 1 },
-  notificationType: {
     fontSize: FONT_SIZES.sm,
     fontWeight: '700',
     color: COLORS.textPrimary,
-  },
-  notificationText: {
     fontSize: FONT_SIZES.sm,
     color: COLORS.textSecondary,
-    marginTop: 4,
     lineHeight: 20,
-  },
-  notificationDate: {
     fontSize: FONT_SIZES.xs,
     color: COLORS.textMuted,
     marginTop: 6,
-  },
   dot: {
     width: 8,
     height: 8,
     borderRadius: 4,
     backgroundColor: COLORS.primary,
     marginLeft: SPACING.sm,
-  },
-});

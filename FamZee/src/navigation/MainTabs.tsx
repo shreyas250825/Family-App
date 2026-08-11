@@ -1,20 +1,10 @@
-import React from 'react';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+
 import { Text, StyleSheet, View } from 'react-native';
-import HomeFeedScreen from '../screens/HomeFeedScreen';
 import ChatStack from './ChatStack';
-import NotificationsScreen from '../screens/NotificationsScreen';
-import SettingsScreen from '../screens/SettingsScreen';
 import { COLORS } from '../utils/constants';
 import { useNotificationStore } from '../store/notificationStore';
-
-const Tab = createBottomTabNavigator();
-
-export default function MainTabs() {
   const unreadCount = useNotificationStore((s) => s.unreadCount);
 
-  return (
-    <Tab.Navigator
       screenOptions={({ route }) => ({
         tabBarActiveTintColor: COLORS.primary,
         tabBarInactiveTintColor: COLORS.textMuted,
@@ -47,9 +37,6 @@ export default function MainTabs() {
       <Tab.Screen name="Chat" component={ChatStack} options={{ headerShown: false }} />
       <Tab.Screen name="Notifications" component={NotificationsScreen} options={{ tabBarLabel: 'Alerts' }} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
-    </Tab.Navigator>
-  );
-}
 
 const styles = StyleSheet.create({
   tabBar: {

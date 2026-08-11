@@ -2,19 +2,16 @@ import { useState, useRef } from 'react';
 import { AppLayout } from '../components/layout/AppLayout';
 import { Modal } from '../components/ui/Modal';
 import { useFamZee } from '../context/FamZeeContext';
+import { DEMO_ALBUMS_GRID } from '../lib/demoContent';
 import type { StoredAlbum } from '../lib/seedData';
 
 const CATEGORIES = [
   { id: 'all', label: 'All Albums' },
   { id: 'vacation', label: 'Vacations' },
-  { id: 'wedding', label: 'Weddings' },
   { id: 'birthday', label: 'Birthdays' },
+  { id: 'holiday', label: 'Celebrations' },
   { id: 'general', label: 'General' },
 ];
-
-const CATEGORY_ICONS: Record<string, string> = {
-  vacation: '✈️', wedding: '💒', birthday: '🎂', general: '📷',
-};
 
 export function Albums() {
   const { data, addAlbum, addPhotoToAlbum, uploadImage } = useFamZee();
@@ -27,11 +24,23 @@ export function Albums() {
   const uploadRef = useRef<HTMLInputElement>(null);
   const albumUploadRef = useRef<HTMLInputElement>(null);
 
-  const filtered = activeCategory === 'all'
-    ? data.albums
-    : data.albums.filter((a) => a.category === activeCategory);
+  const demoAlbums: StoredAlbum[] = DEMO_ALBUMS_GRID.map((a, i) => ({
+    id: `demo_album_${i}`,
+    title: a.title,
+    cover: a.cover,
+    photoCount: a.count,
+    category: (['vacation', 'general', 'birthday', 'general', 'vacation'] as const)[i],
+    date: '2025',
+    photos: Array.from({ length: 3 }, (_, j) => ({
+      id: `demo_photo_${i}_${j}`,
+      url: a.cover,
+      addedAt: new Date().toISOString(),
+    })),
+  }));
 
-  const totalPhotos = data.albums.reduce((s, a) => s + a.photoCount, 0);
+  const albums = data.albums.length > 0 ? data.albums : demoAlbums;
+  const filtered = activeCategory === 'all' ? albums : albums.filter((a) => a.category === activeCategory);
+  const totalPhotos = albums.reduce((s, a) => s + a.photoCount, 0);
 
   const handleCreateCover = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -56,95 +65,85 @@ export function Albums() {
 
   return (
     <AppLayout title="Photo Albums">
-      <div className="flex flex-wrap gap-2 mb-6 justify-between items-center">
+      <div className="mb-6 flex flex-wrap items-center justify-between gap-2">
         <div className="flex flex-wrap gap-2">
           {CATEGORIES.map((cat) => (
             <button
               key={cat.id}
+              type="button"
               onClick={() => setActiveCategory(cat.id)}
-              className={`px-4 py-2 rounded-xl text-sm font-medium transition-all ${
-                activeCategory === cat.id ? 'bg-gradient-brand text-white shadow-soft' : 'glass-dark text-slate-600 shadow-soft'
+              className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
+                activeCategory === cat.id ? 'bg-stone-100 text-[#0a0a0a]' : 'border border-white/[0.06] text-stone-400 hover:text-stone-200'
               }`}
             >
               {cat.label}
             </button>
           ))}
         </div>
-        <button onClick={() => setShowCreate(true)} className="px-5 py-2.5 bg-gradient-brand text-white rounded-xl text-sm font-semibold shadow-soft">
+        <button type="button" onClick={() => setShowCreate(true)} className="app-btn-primary">
           + New Album
         </button>
       </div>
 
-      <div className="glass-dark rounded-2xl p-4 mb-8 shadow-soft flex gap-6">
-        <div><span className="text-2xl font-bold text-gradient">{data.albums.length}</span><span className="text-sm text-slate-500 ml-2">Albums</span></div>
-        <div><span className="text-2xl font-bold text-gradient">{totalPhotos}</span><span className="text-sm text-slate-500 ml-2">Photos</span></div>
+      <div className="mb-8 flex gap-8 rounded-2xl border border-white/[0.06] bg-[#0B0B0D] p-4">
+        <div><span className="text-2xl font-medium text-stone-100">{albums.length}</span><span className="ml-2 text-sm text-stone-500">Albums</span></div>
+        <div><span className="text-2xl font-medium text-stone-100">{totalPhotos}</span><span className="ml-2 text-sm text-stone-500">Photos</span></div>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filtered.length === 0 ? (
-          <div className="col-span-full bg-white rounded-2xl border border-neutral-100 p-12 text-center shadow-sm">
-            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-neutral-100 flex items-center justify-center text-2xl">🖼️</div>
-            <h3 className="text-lg font-bold text-neutral-900 mb-2">No albums yet</h3>
-            <p className="text-neutral-500 text-sm mb-6">Create your first album to organize family photos.</p>
-            <button onClick={() => setShowCreate(true)} className="px-6 py-2.5 bg-neutral-900 text-white rounded-xl text-sm font-semibold">
-              Create album
-            </button>
-          </div>
-        ) : (
-        filtered.map((album) => (
-          <div
+      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+        {filtered.map((album) => (
+          <button
             key={album.id}
+            type="button"
             onClick={() => setViewAlbum(album)}
-            className="group glass-dark rounded-2xl overflow-hidden shadow-soft hover:shadow-card transition-all hover:-translate-y-1 cursor-pointer"
+            className="group overflow-hidden rounded-2xl border border-white/[0.06] bg-[#0B0B0D] text-left transition hover:border-white/10"
           >
             <div className="relative h-52 overflow-hidden">
-              <img src={album.cover} alt={album.title} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700" />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent" />
-              <div className="absolute top-3 right-3 px-2.5 py-1 glass rounded-lg text-xs font-medium">{CATEGORY_ICONS[album.category]} {album.category}</div>
-              <div className="absolute bottom-3 left-3 right-3"><h3 className="text-white font-bold text-lg">{album.title}</h3></div>
-            </div>
-            <div className="p-4 flex justify-between items-center">
-              <div>
-                <p className="text-sm text-slate-500">{album.date}</p>
-                <p className="text-sm font-medium text-slate-700">{album.photoCount} photos</p>
+              <img src={album.cover} alt={album.title} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy" />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+              <div className="absolute bottom-3 left-3 right-3">
+                <h3 className="text-base font-medium text-white">{album.title}</h3>
+                <p className="text-xs text-stone-400">{album.photoCount} photos</p>
               </div>
-              <span className="text-brand-primary font-semibold text-sm">View →</span>
             </div>
-          </div>
-        ))
-        )}
+          </button>
+        ))}
       </div>
 
       <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Create Album">
         <div className="space-y-4">
-          <input placeholder="Album title" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:outline-none focus:ring-2 focus:ring-brand-primary/20" />
-          <select value={newCategory} onChange={(e) => setNewCategory(e.target.value as StoredAlbum['category'])} className="w-full px-4 py-3 rounded-xl border border-slate-200">
-            <option value="general">General</option><option value="vacation">Vacation</option><option value="wedding">Wedding</option><option value="birthday">Birthday</option>
+          <input placeholder="Album title" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} className="w-full rounded-xl border border-white/10 bg-[#0a0a0a] px-4 py-3 text-stone-200 focus:outline-none focus:ring-1 focus:ring-white/20" />
+          <select value={newCategory} onChange={(e) => setNewCategory(e.target.value as StoredAlbum['category'])} className="w-full rounded-xl border border-white/10 bg-[#0a0a0a] px-4 py-3 text-stone-200">
+            <option value="general">General</option>
+            <option value="vacation">Vacation</option>
+            <option value="birthday">Birthday</option>
+            <option value="holiday">Holiday</option>
           </select>
           <input ref={uploadRef} type="file" accept="image/*" className="hidden" onChange={handleCreateCover} />
-          {newCover ? <img src={newCover} alt="" className="w-full h-40 object-cover rounded-xl" /> : null}
-          <button onClick={() => uploadRef.current?.click()} className="w-full py-2.5 border border-dashed border-slate-300 rounded-xl text-slate-500 hover:bg-slate-50">📷 Upload Cover Photo</button>
-          <button onClick={handleCreateAlbum} disabled={!newTitle || !newCover} className="w-full py-3 bg-gradient-brand text-white rounded-xl font-semibold disabled:opacity-50">Create Album</button>
+          {newCover ? <img src={newCover} alt="" className="h-40 w-full rounded-xl object-cover" /> : null}
+          <button type="button" onClick={() => uploadRef.current?.click()} className="w-full rounded-xl border border-dashed border-white/10 py-2.5 text-sm text-stone-500 hover:bg-white/[0.02]">
+            Upload cover photo
+          </button>
+          <button type="button" onClick={handleCreateAlbum} disabled={!newTitle || !newCover} className="w-full app-btn-primary py-3 disabled:opacity-50">
+            Create Album
+          </button>
         </div>
       </Modal>
 
       <Modal open={!!viewAlbum} onClose={() => setViewAlbum(null)} title={viewAlbum?.title || 'Album'} wide>
-        {viewAlbum && (() => {
-          const album = data.albums.find((a) => a.id === viewAlbum.id) ?? viewAlbum;
-          return (
+        {viewAlbum ? (
           <>
             <input ref={albumUploadRef} type="file" accept="image/*" className="hidden" onChange={handleAddToAlbum} />
-            <button onClick={() => albumUploadRef.current?.click()} className="mb-4 px-4 py-2 bg-brand-primary/10 text-brand-primary rounded-xl text-sm font-semibold hover:bg-brand-primary hover:text-white transition-colors">
+            <button type="button" onClick={() => albumUploadRef.current?.click()} className="mb-4 rounded-xl border border-white/10 px-4 py-2 text-sm text-stone-400 hover:bg-white/[0.04]">
               + Add Photo
             </button>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {album.photos.map((photo) => (
-                <img key={photo.id} src={photo.url} alt="" className="w-full h-32 object-cover rounded-xl shadow-soft" />
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
+              {(data.albums.find((a) => a.id === viewAlbum.id)?.photos || viewAlbum.photos).map((photo) => (
+                <img key={photo.id} src={photo.url} alt="" className="aspect-square w-full rounded-xl object-cover" loading="lazy" />
               ))}
             </div>
           </>
-          );
-        })()}
+        ) : null}
       </Modal>
     </AppLayout>
   );

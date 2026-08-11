@@ -1,34 +1,60 @@
-import express from 'express';
-import cors from 'cors';
-import dotenv from 'dotenv';
-import { globalLimiter } from './middleware/rateLimiter';
-import authRoutes from './routes/auth';
-import familyRoutes from './routes/families';
-import postRoutes from './routes/posts';
-import commentRoutes from './routes/comments';
-import likeRoutes from './routes/likes';
-import chatRoutes from './routes/chat';
-import notificationRoutes from './routes/notifications';
-import profileRoutes from './routes/profile';
-import searchRoutes from './routes/search';
-import adminRoutes from './routes/admin';
 
-dotenv.config();
-const app = express();
-app.use(cors());
-app.use(express.json());
-app.use(globalLimiter);
+import path from 'path';
+import { supabase } from './config/supabase';
 
-app.use('/api/auth', authRoutes);
-app.use('/api/families', familyRoutes);
-app.use('/api/posts', postRoutes);
-app.use('/api/comments', commentRoutes);
-app.use('/api/likes', likeRoutes);
-app.use('/api/chat', chatRoutes);
-app.use('/api/notifications', notificationRoutes);
-app.use('/api/profile', profileRoutes);
-app.use('/api/search', searchRoutes);
-app.use('/api/admin', adminRoutes);
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Backend running on port ${PORT}`));
+const corsOrigins = process.env.CORS_ORIGINS
+  ? process.env.CORS_ORIGINS.split(',').map((o) => o.trim())
+  : ['http://localhost:5173', 'http://localhost:8081'];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || corsOrigins.includes('*') || corsOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(null, corsOrigins[0]);
+      }
+    },
+    credentials: true,
+  })
+);
+app.use(express.json({ limit: '10mb' }));
+
+app.use('/uploads', express.static(path.join(process.cwd(), 'uploads')));
+
+app.get('/health', healthHandler);
+app.get('/api/health', healthHandler);
+
+async function healthHandler(_req: express.Request, res: express.Response) {
+  const hasSupabase =
+    !!process.env.SUPABASE_URL && !process.env.SUPABASE_URL.includes('your-project');
+  let dbOk = false;
+  if (hasSupabase) {
+    const { error } = await supabase.from('users').select('id').limit(1);
+    dbOk = !error;
+  }
+  res.json({
+    status: 'ok',
+    timestamp: new Date().toISOString(),
+    supabase_configured: hasSupabase,
+    database_connected: dbOk,
+    version: '1.0.0',
+  });
+}
+app.use((_req, res) => {
+  res.status(404).json({ error: { code: 'NOT_FOUND', message: 'Route not found' } });
+});
+
+app.use((err: Error, _req: express.Request, res: express.Response, _next: express.NextFunction) => {
+  console.error(err);
+  res.status(500).json({ error: { code: 'INTERNAL', message: err.message || 'Server error' } });
+});
+
+const PORT = Number(process.env.PORT) || 5000;
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`FamZee backend running on http://0.0.0.0:${PORT}`);
+  console.log(`Health: http://localhost:${PORT}/health`);
+});
+
+export default app;

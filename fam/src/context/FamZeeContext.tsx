@@ -22,6 +22,7 @@ import {
   uid,
 } from '../lib/seedData';
 import { compressImage, loadAppData, saveAppData } from '../lib/storage';
+import { createDemoAppData } from '../lib/demoSeed';
 import type { FamilyEvent, FamilyPost, Conversation, Message } from '../types/family';
 
 interface FamZeeContextValue {
@@ -51,6 +52,7 @@ interface FamZeeContextValue {
   updateProfile: (updates: Partial<Pick<StoredUser, 'name' | 'avatar'>>) => void;
   updateFamily: (updates: Partial<AppData['family']>) => void;
   deleteAccount: () => void;
+  loadDemoExperience: () => Promise<void>;
   uploadImage: (file: File) => Promise<string>;
   calendarMonth: Date;
   setCalendarMonth: (date: Date) => void;
@@ -492,6 +494,13 @@ export function FamZeeProvider({ children }: { children: ReactNode }) {
     });
   }, [update]);
 
+  const loadDemoExperience = useCallback(async () => {
+    await new Promise((r) => setTimeout(r, 400));
+    const demo = createDemoAppData();
+    setData(demo);
+    persist(demo);
+  }, []);
+
   const uploadImage = useCallback(async (file: File) => compressImage(file), []);
 
   const searchConversations = useCallback(
@@ -535,6 +544,7 @@ export function FamZeeProvider({ children }: { children: ReactNode }) {
       updateProfile,
       updateFamily,
       deleteAccount,
+      loadDemoExperience,
       uploadImage,
       calendarMonth,
       setCalendarMonth,
@@ -566,6 +576,7 @@ export function FamZeeProvider({ children }: { children: ReactNode }) {
       updateProfile,
       updateFamily,
       deleteAccount,
+      loadDemoExperience,
       uploadImage,
       calendarMonth,
       selectedCalendarDay,

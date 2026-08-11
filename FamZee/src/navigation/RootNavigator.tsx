@@ -1,12 +1,6 @@
-import React from 'react';
-import { ActivityIndicator, View, StyleSheet } from 'react-native';
-import { useAuthStore } from '../store/authStore';
-import AuthNavigator from './AuthNavigator';
-import MainTabs from './MainTabs';
-import { COLORS } from '../utils/constants';
 
-export const RootNavigator = () => {
-  const { user, isLoading } = useAuthStore();
+import { ActivityIndicator, View, StyleSheet } from 'react-native';
+import { COLORS } from '../utils/constants';
 
   if (isLoading) {
     return (
@@ -16,8 +10,6 @@ export const RootNavigator = () => {
     );
   }
 
-  return user ? <MainTabs /> : <AuthNavigator />;
-};
 
 const styles = StyleSheet.create({
   loader: {

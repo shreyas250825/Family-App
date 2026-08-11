@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+
 import {
   View,
   Text,
@@ -9,34 +9,21 @@ import {
   Alert,
   TouchableOpacity,
 } from 'react-native';
-import { useAuthStore } from '../store/authStore';
 import { getApiErrorMessage } from '../services/api';
 import Button from '../components/Button';
 import Input from '../components/Input';
 import { COLORS, FONT_SIZES, SPACING } from '../utils/constants';
-
-export default function LoginScreen({ navigation }: any) {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
-  const signIn = useAuthStore((state) => state.signIn);
-
-  const handleLogin = async () => {
     if (!email.trim() || !password.trim()) {
       Alert.alert('Missing fields', 'Please enter your email and password.');
       return;
     }
     setLoading(true);
-    try {
       await signIn(email.trim(), password);
     } catch (error) {
       Alert.alert('Sign in failed', getApiErrorMessage(error, 'Invalid credentials'));
     } finally {
       setLoading(false);
-    }
-  };
-
-  return (
     <KeyboardAvoidingView
       style={styles.flex}
       behavior={Platform.OS === 'ios' ? 'padding' : undefined}
@@ -77,15 +64,9 @@ export default function LoginScreen({ navigation }: any) {
         </View>
       </ScrollView>
     </KeyboardAvoidingView>
-  );
-}
-
-const styles = StyleSheet.create({
   flex: { flex: 1, backgroundColor: COLORS.background },
-  container: {
     flexGrow: 1,
     padding: SPACING.lg,
-    justifyContent: 'center',
   },
   hero: { alignItems: 'center', marginBottom: SPACING.xl },
   logo: { fontSize: 52, marginBottom: SPACING.sm },
@@ -98,13 +79,10 @@ const styles = StyleSheet.create({
     fontSize: FONT_SIZES.sm,
     color: COLORS.textSecondary,
     marginTop: SPACING.xs,
-    textAlign: 'center',
-  },
   card: {
     backgroundColor: COLORS.surface,
     borderRadius: 24,
     padding: SPACING.lg,
-    borderWidth: 1,
     borderColor: COLORS.border,
   },
   title: {
@@ -112,13 +90,10 @@ const styles = StyleSheet.create({
     fontWeight: '800',
     color: COLORS.textPrimary,
     marginBottom: 4,
-  },
   subtitle: {
     fontSize: FONT_SIZES.sm,
     color: COLORS.textSecondary,
     marginBottom: SPACING.lg,
-  },
   link: { marginTop: SPACING.lg, alignItems: 'center' },
   linkText: { color: COLORS.textSecondary, fontSize: FONT_SIZES.sm },
   linkBold: { color: COLORS.primary, fontWeight: '700' },
-});

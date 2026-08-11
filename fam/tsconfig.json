@@ -17,5 +17,12 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": ["src"],
+  "exclude": [
+    "src/components/sections",
+    "src/components/ui/FeatureCard.tsx",
+    "src/components/ui/ProductCard.tsx",
+    "src/components/ui/Navbar.tsx",
+    "src/constants/data.ts"
+  ],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

@@ -1,7 +1,5 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, Switch, ScrollView } from 'react-native';
-import { useAuthStore } from '../store/authStore';
-import { useSettingsStore } from '../store/settingsStore';
 import { useFamilyStore } from '../store/familyStore';
 import ScreenHeader from '../components/ScreenHeader';
 import Button from '../components/Button';
@@ -10,14 +8,7 @@ import { COLORS, FONT_SIZES, SHADOWS, SPACING } from '../utils/constants';
 export default function SettingsScreen() {
   const { user, signOut } = useAuthStore();
   const { currentFamily } = useFamilyStore();
-  const { pushEnabled, updatePushSetting, loadSettings } = useSettingsStore();
 
-  useEffect(() => {
-    loadSettings();
-  }, []);
-
-  return (
-    <View style={styles.container}>
       <ScreenHeader title="Settings" subtitle="Manage your FamZee experience" />
 
       <ScrollView contentContainerStyle={styles.content}>
@@ -39,15 +30,15 @@ export default function SettingsScreen() {
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Notifications</Text>
           <View style={styles.row}>
-            <View>
+            <View style={{ flex: 1, marginRight: SPACING.md }}>
               <Text style={styles.rowLabel}>Push notifications</Text>
-              <Text style={styles.rowHint}>Birthdays, posts, and messages</Text>
+              <Text style={styles.rowHint}>Coming soon — birthdays, posts, and messages</Text>
             </View>
             <Switch
-              value={pushEnabled}
-              onValueChange={updatePushSetting}
+              value={false}
+              disabled
               trackColor={{ false: COLORS.border, true: COLORS.primaryLight }}
-              thumbColor={pushEnabled ? COLORS.primary : '#f4f3f4'}
+              thumbColor="#f4f3f4"
             />
           </View>
         </View>
@@ -57,11 +48,6 @@ export default function SettingsScreen() {
           <Button title="Sign Out" variant="danger" onPress={signOut} />
         </View>
       </ScrollView>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: COLORS.background },
   content: { padding: SPACING.md, paddingBottom: SPACING['2xl'] },
   profileCard: {
@@ -100,8 +86,6 @@ const styles = StyleSheet.create({
     color: COLORS.secondary,
     marginTop: 6,
     fontWeight: '600',
-  },
-  section: {
     backgroundColor: COLORS.surface,
     borderRadius: 20,
     padding: SPACING.md,
@@ -109,28 +93,20 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: COLORS.border,
     ...SHADOWS.soft,
-  },
-  sectionTitle: {
     fontSize: FONT_SIZES.sm,
     fontWeight: '800',
     color: COLORS.textSecondary,
     textTransform: 'uppercase',
     letterSpacing: 0.8,
     marginBottom: SPACING.md,
-  },
   row: {
-    flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
   },
   rowLabel: {
     fontSize: FONT_SIZES.md,
     fontWeight: '600',
     color: COLORS.textPrimary,
-  },
   rowHint: {
     fontSize: FONT_SIZES.xs,
     color: COLORS.textMuted,
     marginTop: 2,
-  },
-});

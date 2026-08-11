@@ -17,7 +17,14 @@ export function Notifications() {
       </div>
 
       <div className="space-y-3">
-        {data.notifications.map((n) => (
+        {data.notifications.length === 0 ? (
+          <div className="bg-white rounded-2xl border border-neutral-100 p-12 text-center">
+            <div className="text-4xl mb-3">🔔</div>
+            <h3 className="font-semibold text-neutral-800 mb-1">You&apos;re all caught up</h3>
+            <p className="text-sm text-neutral-500">Family activity will show up here.</p>
+          </div>
+        ) : (
+          data.notifications.map((n) => (
           <button
             key={n.id}
             onClick={() => markNotificationRead(n.id)}
@@ -33,7 +40,8 @@ export function Notifications() {
             </div>
             {!n.isRead && <span className="w-2 h-2 rounded-full bg-brand-primary flex-shrink-0 mt-2" />}
           </button>
-        ))}
+          ))
+        )}
       </div>
     </AppLayout>
   );

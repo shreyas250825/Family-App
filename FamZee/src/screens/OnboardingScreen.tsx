@@ -1,8 +1,7 @@
-import React, { useState } from 'react';
+
 import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import Button from '../components/Button';
 import { COLORS, FONT_SIZES, SPACING } from '../utils/constants';
-
 const SLIDES = [
   {
     emoji: '👨‍👩‍👧‍👦',
@@ -25,22 +24,13 @@ export default function OnboardingScreen({ navigation }: any) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const slide = SLIDES[currentIndex];
   const isLast = currentIndex === SLIDES.length - 1;
-
-  const handleNext = () => {
     if (isLast) {
       navigation.navigate('Login');
     } else {
-      setCurrentIndex(currentIndex + 1);
-    }
-  };
-
-  return (
-    <View style={styles.container}>
       <TouchableOpacity onPress={() => navigation.navigate('Login')} style={styles.skip}>
         <Text style={styles.skipText}>Skip</Text>
       </TouchableOpacity>
 
-      <View style={styles.content}>
         <View style={styles.emojiWrap}>
           <Text style={styles.emoji}>{slide.emoji}</Text>
         </View>
@@ -52,22 +42,12 @@ export default function OnboardingScreen({ navigation }: any) {
             <View key={index} style={[styles.dot, index === currentIndex && styles.dotActive]} />
           ))}
         </View>
-      </View>
 
-      <View style={styles.footer}>
         <Button
           title={isLast ? 'Get Started' : 'Continue'}
           onPress={handleNext}
           style={styles.cta}
         />
-      </View>
-    </View>
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
     backgroundColor: COLORS.background,
     paddingHorizontal: SPACING.lg,
     paddingBottom: SPACING.xl,
@@ -81,12 +61,6 @@ const styles = StyleSheet.create({
     color: COLORS.textSecondary,
     fontSize: FONT_SIZES.md,
     fontWeight: '600',
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
   emojiWrap: {
     width: 120,
     height: 120,
@@ -99,25 +73,17 @@ const styles = StyleSheet.create({
     borderColor: COLORS.border,
   },
   emoji: { fontSize: 56 },
-  title: {
     fontSize: FONT_SIZES['3xl'],
     fontWeight: '800',
     marginBottom: SPACING.sm,
-    textAlign: 'center',
     color: COLORS.textPrimary,
-  },
-  description: {
     fontSize: FONT_SIZES.md,
-    textAlign: 'center',
     color: COLORS.textSecondary,
     lineHeight: 24,
     paddingHorizontal: SPACING.md,
-  },
   dots: {
-    flexDirection: 'row',
     gap: 8,
     marginTop: SPACING.xl,
-  },
   dot: {
     width: 8,
     height: 8,
@@ -127,7 +93,5 @@ const styles = StyleSheet.create({
   dotActive: {
     width: 24,
     backgroundColor: COLORS.primary,
-  },
   footer: { paddingTop: SPACING.md },
   cta: { width: '100%' },
-});

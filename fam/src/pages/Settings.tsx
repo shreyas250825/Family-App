@@ -7,7 +7,6 @@ import { useFamZee } from '../context/FamZeeContext';
 export function Settings() {
   const navigate = useNavigate();
   const { user, data, logout, updateProfile, deleteAccount, uploadImage } = useFamZee();
-  const [pushEnabled, setPushEnabled] = useState(true);
   const [editOpen, setEditOpen] = useState(false);
   const [name, setName] = useState(user?.name || '');
   const avatarRef = useRef<HTMLInputElement>(null);
@@ -40,7 +39,7 @@ export function Settings() {
   return (
     <AppLayout title="Settings">
       <div className="max-w-2xl space-y-6">
-        <div className="bg-white rounded-2xl p-6 border border-neutral-100 shadow-sm flex items-center gap-5">
+        <div className="app-surface p-6 flex items-center gap-5">
           <div className="relative">
             <img src={user?.avatar} alt="" className="w-20 h-20 rounded-full object-cover ring-2 ring-neutral-100" />
             <button
@@ -52,9 +51,8 @@ export function Settings() {
             <input ref={avatarRef} type="file" accept="image/*" className="hidden" onChange={handleAvatar} />
           </div>
           <div className="flex-1">
-            <h2 className="text-xl font-bold text-neutral-900">{user?.name}</h2>
+            <h2 className="text-xl font-medium text-stone-100">{user?.name}</h2>
             <p className="text-neutral-500 text-sm">{user?.email}</p>
-            <p className="text-xs text-neutral-400 mt-1 capitalize">Signed in with {user?.provider}</p>
           </div>
           <button
             onClick={() => { setName(user?.name || ''); setEditOpen(true); }}
@@ -64,23 +62,15 @@ export function Settings() {
           </button>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 border border-neutral-100 shadow-sm">
-          <h3 className="font-bold text-neutral-900 mb-4">Your family</h3>
+        <div className="app-surface p-6">
+          <h3 className="font-medium text-stone-100 mb-4">Your family</h3>
           <p className="text-neutral-700 font-medium">{data.family.name}</p>
           <p className="text-sm text-neutral-500 mt-1">
             {data.members.length} member{data.members.length !== 1 ? 's' : ''} · {data.family.stats.photos} photos · {data.events.length} events
           </p>
         </div>
 
-        <div className="bg-white rounded-2xl p-6 border border-neutral-100 shadow-sm">
-          <h3 className="font-bold text-neutral-900 mb-4">Notifications</h3>
-          <label className="flex items-center justify-between">
-            <span className="text-neutral-700 text-sm">Push notifications</span>
-            <input type="checkbox" checked={pushEnabled} onChange={(e) => setPushEnabled(e.target.checked)} className="w-5 h-5 accent-neutral-900" />
-          </label>
-        </div>
-
-        <div className="bg-white rounded-2xl p-6 border border-neutral-100 shadow-sm space-y-3">
+        <div className="app-surface p-6 space-y-3">
           <button onClick={handleLogout} className="w-full py-3 bg-neutral-900 text-white rounded-xl font-semibold hover:bg-neutral-800 transition-colors">
             Sign out
           </button>

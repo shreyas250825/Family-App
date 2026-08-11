@@ -74,7 +74,7 @@ export default function FamilySetupScreen() {
           <View style={styles.form}>
             <Input
               label="Family name"
-              placeholder="The Salian Family"
+              placeholder="The Sharma Family"
               value={familyName}
               onChangeText={setFamilyName}
             />

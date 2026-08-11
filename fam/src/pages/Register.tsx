@@ -26,58 +26,73 @@ export function Register() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6 bg-white">
-      <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <Link to="/" className="text-2xl font-bold bg-ig-gradient bg-clip-text text-transparent">FamZee</Link>
-          <h2 className="text-2xl font-bold text-neutral-900 mt-6 mb-2">Create your account</h2>
-          <p className="text-neutral-500 text-sm">Join your family's private circle</p>
+    <div className="min-h-screen bg-[#050505] text-stone-100">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_top,_rgba(124,58,237,0.12)_0%,_transparent_50%)]" />
+      <div className="relative mx-auto flex min-h-screen max-w-lg flex-col px-5 py-8 sm:px-6">
+        <div className="mb-8 pt-4">
+          <Link to="/" className="text-sm font-semibold tracking-[0.2em] text-stone-400">
+            FAMZEE
+          </Link>
         </div>
 
-        {error && <div className="mb-4 p-3 rounded-lg bg-red-50 text-red-600 text-sm border border-red-100">{error}</div>}
+        <div className="flex flex-1 flex-col justify-center pb-8">
+          <h1 className="text-3xl font-semibold tracking-tight">Create your account</h1>
+          <p className="mt-2 text-stone-500">Start your family&apos;s private space.</p>
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            placeholder="Full name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            className="w-full px-4 py-3 rounded-lg border border-neutral-200 bg-neutral-50 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900/10"
-            required
-          />
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full px-4 py-3 rounded-lg border border-neutral-200 bg-neutral-50 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900/10"
-            required
-          />
-          <input
-            type="password"
-            placeholder="Password (min 6 characters)"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            minLength={6}
-            className="w-full px-4 py-3 rounded-lg border border-neutral-200 bg-neutral-50 text-sm focus:outline-none focus:ring-2 focus:ring-neutral-900/10"
-            required
-          />
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full py-3 bg-ig-gradient text-white rounded-lg font-semibold text-sm disabled:opacity-60 hover:opacity-95 transition-opacity"
-          >
-            {loading ? 'Creating account...' : 'Sign up'}
-          </button>
-        </form>
+          {error ? (
+            <div className="mt-6 rounded-xl border border-red-500/20 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+              {error}
+            </div>
+          ) : null}
 
-        <p className="text-center text-sm text-neutral-500 mt-8">
-          Already have an account?{' '}
-          <Link to="/login" className="text-neutral-900 font-semibold hover:underline">Log in</Link>
-        </p>
+          <form onSubmit={handleSubmit} className="mt-8 space-y-4">
+            <input
+              placeholder="Full name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+              className="w-full min-h-[48px] rounded-xl border border-white/[0.08] bg-white/[0.04] px-4 text-sm text-stone-100 placeholder:text-stone-600 focus:outline-none focus:ring-2 focus:ring-violet-500/30"
+            />
+            <input
+              type="email"
+              placeholder="Email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+              className="w-full min-h-[48px] rounded-xl border border-white/[0.08] bg-white/[0.04] px-4 text-sm text-stone-100 placeholder:text-stone-600 focus:outline-none focus:ring-2 focus:ring-violet-500/30"
+            />
+            <input
+              type="password"
+              placeholder="Password (min 6 characters)"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              minLength={6}
+              required
+              className="w-full min-h-[48px] rounded-xl border border-white/[0.08] bg-white/[0.04] px-4 text-sm text-stone-100 placeholder:text-stone-600 focus:outline-none focus:ring-2 focus:ring-violet-500/30"
+            />
+            <button
+              type="submit"
+              disabled={loading}
+              className="flex min-h-[52px] w-full items-center justify-center rounded-full bg-stone-100 text-sm font-semibold text-[#0a0a0a] transition hover:bg-white disabled:opacity-60"
+            >
+              {loading ? 'Creating account...' : 'Create account'}
+            </button>
+          </form>
 
-        <p className="text-center text-xs text-neutral-400 mt-6 leading-relaxed">
-          By signing up, you agree to FamZee's Terms of Service and Privacy Policy.
-        </p>
+          <p className="mt-8 text-center text-sm text-stone-500">
+            Already have an account?{' '}
+            <Link to="/login" className="font-semibold text-stone-200 hover:underline">
+              Sign in
+            </Link>
+          </p>
+
+          <p className="mt-6 text-center text-xs leading-relaxed text-stone-600">
+            By signing up, you agree to our{' '}
+            <Link to="/terms" className="underline hover:text-stone-400">Terms</Link>
+            {' '}and{' '}
+            <Link to="/privacy" className="underline hover:text-stone-400">Privacy Policy</Link>.
+          </p>
+        </div>
       </div>
     </div>
   );
