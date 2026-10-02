@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Fraunces:opsz,wght@9..144,500;9..144,600&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -14,13 +14,163 @@ html {
   scroll-behavior: smooth;
 }
 
+:root,
+[data-appearance='light'][data-palette='blush'] {
+  --bg: #fff9fc;
+  --bg-muted: #f7eef6;
+  --card: #ffffff;
+  --elevated: #ffffff;
+  --text: #2a1f3d;
+  --muted: #7a6b8a;
+  --primary: #7650c8;
+  --primary-soft: #eee6fb;
+  --accent-pink: #f8b4d9;
+  --accent-lavender: #c7b5f5;
+  --accent-sky: #a9ddf5;
+  --border: rgba(118, 80, 200, 0.14);
+  --shadow: 0 12px 40px -16px rgba(90, 50, 140, 0.18);
+  --hero: linear-gradient(135deg, #fff9fc 0%, #fde8f4 42%, #e7f5fd 100%);
+  --ring: rgba(118, 80, 200, 0.28);
+}
+
+[data-appearance='dark'][data-palette='blush'] {
+  --bg: #16101c;
+  --bg-muted: #1e1628;
+  --card: #221a30;
+  --elevated: #2a203a;
+  --text: #f6eef8;
+  --muted: #b5a8c4;
+  --primary: #b49ae8;
+  --primary-soft: rgba(180, 154, 232, 0.16);
+  --accent-pink: #e8a0c8;
+  --accent-lavender: #c7b5f5;
+  --accent-sky: #7ec8e8;
+  --border: rgba(199, 181, 245, 0.16);
+  --shadow: 0 16px 48px -12px rgba(0, 0, 0, 0.45);
+  --hero: linear-gradient(135deg, #1c1326 0%, #2a1a38 45%, #152433 100%);
+  --ring: rgba(180, 154, 232, 0.4);
+}
+
+[data-appearance='light'][data-palette='ocean'] {
+  --bg: #f4fbfd;
+  --bg-muted: #e7f6f8;
+  --card: #ffffff;
+  --elevated: #ffffff;
+  --text: #16343f;
+  --muted: #5e7c86;
+  --primary: #1f7a8c;
+  --primary-soft: #d7f1f4;
+  --accent-pink: #9ee7d9;
+  --accent-lavender: #8ec5e8;
+  --accent-sky: #b9f0ea;
+  --border: rgba(31, 122, 140, 0.16);
+  --shadow: 0 12px 40px -16px rgba(20, 90, 110, 0.18);
+  --hero: linear-gradient(135deg, #f4fbfd 0%, #d9f4f2 40%, #d6eef8 100%);
+  --ring: rgba(31, 122, 140, 0.3);
+}
+
+[data-appearance='dark'][data-palette='ocean'] {
+  --bg: #0c181d;
+  --bg-muted: #122228;
+  --card: #173038;
+  --elevated: #1c3a44;
+  --text: #e8f6f8;
+  --muted: #9ab8c0;
+  --primary: #6fd3e0;
+  --primary-soft: rgba(111, 211, 224, 0.14);
+  --accent-pink: #6fd3c2;
+  --accent-lavender: #7eb8d8;
+  --accent-sky: #8ee4dc;
+  --border: rgba(111, 211, 224, 0.16);
+  --shadow: 0 16px 48px -12px rgba(0, 0, 0, 0.5);
+  --hero: linear-gradient(135deg, #0e1c22 0%, #123038 50%, #102830 100%);
+  --ring: rgba(111, 211, 224, 0.35);
+}
+
+[data-appearance='light'][data-palette='sunset'] {
+  --bg: #fff8f2;
+  --bg-muted: #ffefe3;
+  --card: #ffffff;
+  --elevated: #ffffff;
+  --text: #3b2418;
+  --muted: #8a6a58;
+  --primary: #c45c2c;
+  --primary-soft: #ffe4d4;
+  --accent-pink: #f7b6a0;
+  --accent-lavender: #f3c96b;
+  --accent-sky: #f8c8b0;
+  --border: rgba(196, 92, 44, 0.16);
+  --shadow: 0 12px 40px -16px rgba(160, 70, 30, 0.18);
+  --hero: linear-gradient(135deg, #fff8f2 0%, #ffe4cc 42%, #ffd6e4 100%);
+  --ring: rgba(196, 92, 44, 0.3);
+}
+
+[data-appearance='dark'][data-palette='sunset'] {
+  --bg: #1c130f;
+  --bg-muted: #261910;
+  --card: #322018;
+  --elevated: #3c281e;
+  --text: #f8eee6;
+  --muted: #c4a898;
+  --primary: #f0a070;
+  --primary-soft: rgba(240, 160, 112, 0.16);
+  --accent-pink: #e89a88;
+  --accent-lavender: #e0b868;
+  --accent-sky: #e8a888;
+  --border: rgba(240, 160, 112, 0.18);
+  --shadow: 0 16px 48px -12px rgba(0, 0, 0, 0.5);
+  --hero: linear-gradient(135deg, #22140f 0%, #3a2218 48%, #2a1820 100%);
+  --ring: rgba(240, 160, 112, 0.35);
+}
+
+[data-appearance='light'][data-palette='classic'] {
+  --bg: #f7f8fb;
+  --bg-muted: #eef1f6;
+  --card: #ffffff;
+  --elevated: #ffffff;
+  --text: #1c2430;
+  --muted: #6b7585;
+  --primary: #3b6fd8;
+  --primary-soft: #e4edfb;
+  --accent-pink: #c9d8f0;
+  --accent-lavender: #b8c8e0;
+  --accent-sky: #d6e4f8;
+  --border: rgba(28, 36, 48, 0.1);
+  --shadow: 0 12px 36px -16px rgba(20, 30, 50, 0.14);
+  --hero: linear-gradient(180deg, #ffffff 0%, #eef3fb 100%);
+  --ring: rgba(59, 111, 216, 0.28);
+}
+
+[data-appearance='dark'][data-palette='classic'] {
+  --bg: #10141a;
+  --bg-muted: #171c24;
+  --card: #1c222c;
+  --elevated: #232a36;
+  --text: #f2f4f7;
+  --muted: #a8b0bc;
+  --primary: #7aa2ea;
+  --primary-soft: rgba(122, 162, 234, 0.16);
+  --accent-pink: #8aa0c0;
+  --accent-lavender: #7a90b0;
+  --accent-sky: #90b0d8;
+  --border: rgba(255, 255, 255, 0.08);
+  --shadow: 0 16px 48px -12px rgba(0, 0, 0, 0.5);
+  --hero: linear-gradient(180deg, #141820 0%, #1a2430 100%);
+  --ring: rgba(122, 162, 234, 0.35);
+}
+
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #050505;
-  color: #fafaf9;
+  background-color: var(--bg, #fff9fc);
+  color: var(--text, #2a1f3d);
   overflow-x: hidden;
+  transition: background-color 0.35s ease, color 0.35s ease;
+}
+
+.font-display {
+  font-family: Fraunces, Georgia, serif;
 }
 
 .page-transition-enter {
@@ -49,12 +199,86 @@ body {
 
 @layer components {
   .app-surface {
-    @apply rounded-xl border border-white/[0.06] bg-[#0c0c0c];
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 1.25rem;
+    box-shadow: var(--shadow);
   }
 
   .app-btn-primary {
-    @apply rounded-lg bg-stone-100 px-4 py-2 text-sm font-medium text-[#0a0a0a] transition hover:bg-white;
+    @apply rounded-full px-4 py-2 text-sm font-medium transition;
+    background: var(--primary);
+    color: #fff;
   }
+
+  .app-btn-primary:hover {
+    filter: brightness(1.05);
+  }
+}
+
+.fam-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 1.35rem;
+  box-shadow: var(--shadow);
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.fam-card:hover {
+  transform: translateY(-2px);
+}
+
+.fam-btn {
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--elevated);
+  color: var(--text);
+  padding: 0.55rem 1.1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.fam-btn:hover {
+  background: var(--primary-soft);
+}
+
+.fam-btn-primary {
+  border-radius: 999px;
+  border: none;
+  background: var(--primary);
+  color: #fff;
+  padding: 0.6rem 1.2rem;
+  font-size: 0.875rem;
+  font-weight: 600;
+  transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.fam-btn-primary:hover {
+  filter: brightness(1.08);
+}
+
+.fam-input {
+  width: 100%;
+  border-radius: 0.9rem;
+  border: 1px solid var(--border);
+  background: var(--elevated);
+  color: var(--text);
+  padding: 0.75rem 1rem;
+  font-size: 0.9rem;
+}
+
+.fam-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px var(--ring);
+}
+
+.fam-muted {
+  color: var(--muted);
+}
+
+.fam-hero {
+  background: var(--hero);
 }
 
 .reveal {
@@ -68,7 +292,6 @@ body {
   transform: translateY(0);
 }
 
-/* Hero-only animations */
 .hero-main-card {
   opacity: 0;
   transform: translateY(24px);
@@ -90,8 +313,13 @@ body {
 }
 
 @keyframes heroFloat {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
 }
 
 @keyframes heroCardIn {
@@ -105,18 +333,140 @@ body {
   }
 }
 
+@keyframes heartbeatOnce {
+  0% {
+    transform: scale(1);
+  }
+  25% {
+    transform: scale(1.18);
+  }
+  50% {
+    transform: scale(0.96);
+  }
+  75% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.reaction-pop {
+  animation: heartbeatOnce 0.55s ease;
+}
+
+.timeline-reveal {
+  animation: pageEnter 0.5s ease both;
+}
+
+.landing-page {
+  background: var(--bg);
+  color: var(--text);
+}
+
+.landing-page .ld-kicker {
+  color: var(--primary);
+}
+
+.landing-page .bg-\[\#050505\],
+.landing-page .bg-\[\#0a0a0a\],
+.landing-page .bg-\[\#0B0B0D\],
+.landing-page .bg-\[\#080808\],
+.landing-page .bg-\[\#111113\],
+.landing-page .bg-\[\#0c0c0c\],
+.landing-page .workspace-shell {
+  background-color: var(--card) !important;
+}
+
+.landing-page .bg-\[\#050505\]\/80 {
+  background-color: color-mix(in srgb, var(--bg) 84%, transparent) !important;
+}
+
+.landing-page .bg-\[\#0c0c0c\]\/90 {
+  background-color: color-mix(in srgb, var(--card) 92%, transparent) !important;
+}
+
+.landing-page .text-stone-50,
+.landing-page .text-stone-100,
+.landing-page .text-stone-200,
+.landing-page .text-stone-300 {
+  color: var(--text) !important;
+}
+
+.landing-page .text-stone-400,
+.landing-page .text-stone-500,
+.landing-page .text-stone-600 {
+  color: var(--muted) !important;
+}
+
+.landing-page .text-violet-400,
+.landing-page .text-violet-400\/60,
+.landing-page .text-violet-400\/70,
+.landing-page .text-violet-400\/80,
+.landing-page .text-violet-200,
+.landing-page .text-violet-300,
+.landing-page .text-violet-300\/90 {
+  color: var(--primary) !important;
+}
+
+.landing-page .border-white\/\[0\.04\],
+.landing-page .border-white\/\[0\.06\],
+.landing-page .border-white\/\[0\.08\],
+.landing-page .border-white\/\[0\.1\],
+.landing-page .border-white\/\[0\.12\],
+.landing-page .border-white\/10,
+.landing-page .border-white\/15 {
+  border-color: var(--border) !important;
+}
+
+.landing-page .bg-white\/\[0\.02\],
+.landing-page .bg-white\/\[0\.03\],
+.landing-page .bg-white\/\[0\.04\],
+.landing-page .bg-white\/\[0\.06\],
+.landing-page .bg-white\/\[0\.08\],
+.landing-page .bg-violet-500\/15 {
+  background-color: var(--primary-soft) !important;
+}
+
+.landing-page .bg-stone-100 {
+  background-color: var(--primary) !important;
+  color: #fff !important;
+}
+
+.landing-page .text-\[\#0a0a0a\] {
+  color: #fff !important;
+}
+
+.landing-page .hover\:bg-white:hover {
+  filter: brightness(1.06);
+}
+
+.landing-page .ring-white\/\[0\.08\] {
+  --tw-ring-color: var(--border);
+}
+
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
 
-  .page-transition-enter {
+  .page-transition-enter,
+  .reaction-pop,
+  .timeline-reveal,
+  .hero-main-float,
+  .hero-float-card {
     animation: none;
+  }
+
+  .reveal,
+  .fam-card:hover,
+  .fam-btn:hover,
+  .fam-btn-primary:hover {
+    transform: none;
   }
 
   .reveal {
     opacity: 1;
-    transform: none;
   }
 
   .hero-main-card,
@@ -125,5 +475,9 @@ body {
     opacity: 1;
     transform: none;
     animation: none;
+  }
+
+  body {
+    transition: none;
   }
 }

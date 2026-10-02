@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
 import { DEMO_POSTS } from '../../lib/demoContent';
 import { MemberAvatar } from './premium/MemberAvatar';
@@ -24,17 +24,21 @@ function FloatingCard({
   delay = 0,
   animate = true,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
   delay?: number;
   animate?: boolean;
 }) {
   return (
     <div
-      className={`rounded-xl border border-white/[0.08] bg-[#0c0c0c]/90 p-3.5 shadow-[0_8px_32px_-8px_rgba(0,0,0,0.6)] backdrop-blur-md sm:p-4 ${
+      className={`rounded-xl border p-3.5 shadow-[var(--shadow)] backdrop-blur-md sm:p-4 ${
         animate ? 'hero-float-card' : ''
       } ${className}`}
-      style={animate ? { animationDelay: `${delay}ms` } : undefined}
+      style={{
+        ...(animate ? { animationDelay: `${delay}ms` } : {}),
+        borderColor: 'var(--border)',
+        background: 'color-mix(in srgb, var(--card) 92%, transparent)',
+      }}
     >
       {children}
     </div>
@@ -88,30 +92,30 @@ export function HeroSection() {
         <div className="grid items-center gap-10 lg:grid-cols-[45fr_55fr] lg:gap-12 xl:gap-16">
           {/* Left — copy */}
           <div className="order-1 lg:order-none">
-            <p className="text-[11px] font-medium tracking-[0.28em] text-violet-400/60">FAMZEE</p>
-            <h1 className="mt-4 max-w-lg text-[2rem] font-semibold leading-[1.1] tracking-[-0.03em] text-stone-50 sm:text-[2.75rem] lg:text-[3.25rem]">
+            <p className="text-[11px] font-medium tracking-[0.28em] ld-kicker">FAMZEE</p>
+            <h1 className="mt-4 max-w-lg font-display text-[2rem] font-semibold leading-[1.1] tracking-[-0.03em] sm:text-[2.75rem] lg:text-[3.25rem]">
               Your family&apos;s life,
               <br />
-              <span className="font-medium text-stone-200">in one private place.</span>
+              <span className="font-medium fam-muted">in one private place.</span>
             </h1>
-            <p className="mt-5 max-w-md text-base leading-relaxed text-stone-400">
+            <p className="mt-5 max-w-md text-base leading-relaxed fam-muted">
               Memories, conversations, events and the people you love — together in one private family space.
             </p>
             <div className="mt-8 flex flex-wrap gap-3">
               <Link
                 to="/login?demo=1"
-                className="inline-flex min-h-[48px] items-center rounded-xl bg-stone-100 px-6 text-sm font-medium text-[#0a0a0a] transition hover:bg-white hover:shadow-[0_8px_24px_-8px_rgba(255,255,255,0.25)]"
+                className="fam-btn-primary inline-flex min-h-[48px] items-center px-6"
               >
                 Explore FamZee
               </Link>
               <a
                 href="#how-it-works"
-                className="inline-flex min-h-[48px] items-center rounded-xl border border-white/[0.12] bg-white/[0.02] px-6 text-sm text-stone-300 transition hover:border-white/20 hover:bg-white/[0.04]"
+                className="fam-btn inline-flex min-h-[48px] items-center px-6"
               >
                 See how it works
               </a>
             </div>
-            <p className="mt-6 text-xs text-stone-600">
+            <p className="mt-6 text-xs fam-muted">
               Private by design · Built for families
             </p>
           </div>
@@ -163,18 +167,19 @@ export function HeroSection() {
               style={parallaxStyle}
             >
               <div
-                className={`hero-main-card relative z-10 overflow-hidden rounded-[20px] border border-white/[0.08] bg-[#0B0B0D] shadow-[0_32px_80px_-24px_rgba(0,0,0,0.85)] transition-shadow duration-500 hover:shadow-[0_40px_90px_-24px_rgba(139,92,246,0.12)] ${
+                className={`hero-main-card relative z-10 overflow-hidden rounded-[20px] border shadow-[var(--shadow)] ${
                   loaded ? 'hero-main-loaded' : ''
                 } ${reducedMotion ? '' : 'hero-main-float'}`}
+                style={{ borderColor: 'var(--border)', background: 'var(--card)' }}
               >
               {/* Browser chrome */}
-              <div className="flex items-center gap-2 border-b border-white/[0.06] bg-[#080808] px-4 py-2.5">
+              <div className="flex items-center gap-2 border-b px-4 py-2.5" style={{ borderColor: 'var(--border)', background: 'var(--elevated)' }}>
                 <div className="flex gap-1.5">
-                  <span className="h-2.5 w-2.5 rounded-full bg-white/10" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-white/10" />
-                  <span className="h-2.5 w-2.5 rounded-full bg-white/10" />
+                  <span className="h-2.5 w-2.5 rounded-full" style={{ background: 'var(--border)' }} />
+                  <span className="h-2.5 w-2.5 rounded-full" style={{ background: 'var(--border)' }} />
+                  <span className="h-2.5 w-2.5 rounded-full" style={{ background: 'var(--border)' }} />
                 </div>
-                <div className="mx-auto flex h-6 flex-1 max-w-[180px] items-center justify-center rounded-md bg-white/[0.04] px-3 text-[10px] text-stone-600 sm:max-w-[220px]">
+                <div className="mx-auto flex h-6 flex-1 max-w-[180px] items-center justify-center rounded-md px-3 text-[10px] fam-muted sm:max-w-[220px]" style={{ background: 'var(--primary-soft)' }}>
                   famzee.app
                 </div>
               </div>
@@ -183,7 +188,7 @@ export function HeroSection() {
                 <p className="text-[10px] font-medium tracking-widest text-stone-600">FAMZEE</p>
                 <p className="mt-1 text-sm font-medium text-stone-300">Family Feed</p>
 
-                <div className="mt-4 overflow-hidden rounded-xl border border-white/[0.06] bg-[#111113]">
+                <div className="mt-4 overflow-hidden rounded-xl border" style={{ borderColor: 'var(--border)', background: 'var(--elevated)' }}>
                   <div className="flex items-center gap-3 p-3.5 sm:p-4">
                     <MemberAvatar member={{ name: post.author, color: post.authorColor }} size="sm" />
                     <div>

@@ -53,8 +53,8 @@ export function FamZeeLogo({
     <span className={`inline-flex items-center gap-2.5 ${className}`}>
       <FamZeeMark size={size} />
       {showWordmark ? (
-        <span className={`text-[1.05rem] font-semibold tracking-[-0.02em] text-stone-50 ${wordmarkClassName}`} aria-hidden>
-          Fam<span className="font-medium text-stone-300">Zee</span>
+        <span className={`text-[1.05rem] font-semibold tracking-[-0.02em] ${wordmarkClassName || 'text-[var(--text)]'}`} aria-hidden>
+          Fam<span className="font-medium opacity-70">Zee</span>
         </span>
       ) : null}
     </span>

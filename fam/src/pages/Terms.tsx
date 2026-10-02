@@ -1,6 +1,6 @@
 export function Terms() {
   return (
-    <div className="min-h-screen bg-[#050505] py-24 px-6 text-stone-300">
+    <div className="min-h-screen px-6 py-24" style={{ background: 'var(--bg)', color: 'var(--text)' }}>
       <div className="max-w-2xl mx-auto prose prose-neutral">
         <a href="/" className="text-sm text-neutral-500 hover:text-neutral-900 no-underline">← Back to FamZee</a>
         <h1 className="text-3xl font-bold mt-6 mb-4">Terms of Service</h1>

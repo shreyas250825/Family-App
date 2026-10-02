@@ -45,12 +45,12 @@ export function Messages() {
 
   return (
     <AppLayout>
-      <div className="flex h-[calc(100vh-8rem)] overflow-hidden rounded-2xl border border-white/[0.06] bg-[#0B0B0D] lg:h-[calc(100vh-6rem)]">
+      <div className="fam-card flex h-[calc(100vh-8rem)] overflow-hidden lg:h-[calc(100vh-6rem)]">
         {/* Conversation list */}
         <div className={`w-full flex-col border-r border-white/[0.06] sm:w-80 ${mobileShowChat ? 'hidden sm:flex' : 'flex'}`}>
           <div className="border-b border-white/[0.06] p-4">
             <div className="mb-3 flex items-center justify-between">
-              <h2 className="text-lg font-medium text-stone-100">Messages</h2>
+              <h2 className="text-lg font-medium ">Messages</h2>
               {otherMembers.length > 0 ? (
                 <button type="button" onClick={() => setNewChatOpen(true)} className="text-xs font-medium text-violet-400 hover:text-violet-300">
                   New
@@ -62,7 +62,7 @@ export function Messages() {
               placeholder="Search conversations…"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              className="w-full rounded-lg border border-white/[0.06] bg-[#111113] px-4 py-2.5 text-sm text-stone-200 placeholder:text-stone-600 focus:outline-none focus:ring-1 focus:ring-violet-500/30"
+              className="fam-input"
             />
           </div>
           <div className="flex-1 overflow-y-auto">
@@ -102,7 +102,7 @@ export function Messages() {
               </button>
               <img src={activeConversation.avatar} alt="" className="h-10 w-10 rounded-full object-cover" />
               <div>
-                <h3 className="font-medium text-stone-100">{activeConversation.name}</h3>
+                <h3 className="font-medium ">{activeConversation.name}</h3>
                 <p className="text-xs text-emerald-500">
                   {activeConversation.isGroup ? '4 members · active' : 'Active now'}
                 </p>
@@ -147,7 +147,7 @@ export function Messages() {
               ) : null}
             </div>
 
-            <div className="border-t border-white/[0.06] bg-[#0a0a0a] p-4">
+            <div className="border-t p-4" style={{ borderColor: 'var(--border)', background: 'var(--elevated)' }}>
               <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleAttach} />
               <div className="flex items-center gap-2">
                 <button type="button" onClick={() => fileRef.current?.click()} className="rounded-lg p-2 text-stone-500 hover:bg-white/[0.04]" aria-label="Attach">
@@ -158,7 +158,7 @@ export function Messages() {
                   onChange={(e) => setMessageInput(e.target.value)}
                   onKeyDown={(e) => e.key === 'Enter' && handleSend()}
                   placeholder="Message…"
-                  className="flex-1 rounded-xl border border-white/[0.06] bg-[#111113] px-4 py-3 text-sm text-stone-200 placeholder:text-stone-600 focus:outline-none focus:ring-1 focus:ring-violet-500/30"
+                  className="fam-input flex-1"
                 />
                 <button
                   type="button"

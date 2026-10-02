@@ -113,7 +113,7 @@ export function Events() {
       <div className="grid gap-6 lg:grid-cols-3">
         <div className="app-surface rounded-2xl p-6 lg:col-span-1">
           <div className="mb-6 flex items-center justify-between">
-            <h2 className="text-lg font-medium text-stone-100">{label}</h2>
+            <h2 className="text-lg font-medium ">{label}</h2>
             <div className="flex gap-1">
               <button type="button" onClick={prevMonth} className="rounded-lg p-2 text-stone-500 hover:bg-white/[0.04]">‹</button>
               <button type="button" onClick={nextMonth} className="rounded-lg p-2 text-stone-500 hover:bg-white/[0.04]">›</button>
@@ -139,10 +139,10 @@ export function Events() {
                   type="button"
                   onClick={() => setSelectedCalendarDay(selected ? null : day)}
                   className={`relative rounded-lg py-2 text-sm font-medium transition ${
-                    isToday ? 'bg-stone-100 text-[#0a0a0a]'
-                    : selected ? 'bg-white/10 text-stone-100'
-                    : hasEvent ? 'bg-white/[0.06] text-stone-300 hover:bg-white/10'
-                    : 'text-stone-400 hover:bg-white/[0.04]'
+                    isToday ? 'bg-[var(--primary)] text-white'
+                    : selected ? 'bg-[var(--primary-soft)]'
+                    : hasEvent ? 'bg-[var(--primary-soft)] fam-muted'
+                    : 'fam-muted'
                   }`}
                 >
                   {day}
@@ -157,7 +157,7 @@ export function Events() {
 
         <div className="space-y-6 lg:col-span-2">
           <section>
-            <h2 className="mb-4 text-lg font-medium text-stone-100">Upcoming</h2>
+            <h2 className="mb-4 text-lg font-medium ">Upcoming</h2>
             <div className="space-y-4">
               {events.map((event) => {
                 const style = EVENT_TYPE_STYLES[event.type];
@@ -172,7 +172,7 @@ export function Events() {
                         <span className={`mb-2 inline-flex items-center gap-1 rounded-full border px-2.5 py-1 text-xs font-medium ${style.bg} ${style.text} ${style.border}`}>
                           {style.icon} {event.type}
                         </span>
-                        <h3 className="text-base font-medium text-stone-100">{event.title}</h3>
+                        <h3 className="text-base font-medium ">{event.title}</h3>
                         <div className="mt-2 flex flex-wrap gap-3 text-xs text-stone-500">
                           <span>{event.date}</span>
                           {event.time ? <span>{event.time}</span> : null}
@@ -206,13 +206,13 @@ export function Events() {
 
           {data.members.some((m) => m.birthday) ? (
             <section>
-              <h2 className="mb-4 text-lg font-medium text-stone-100">Birthdays</h2>
+              <h2 className="mb-4 text-lg font-medium ">Birthdays</h2>
               <div className="grid gap-3 sm:grid-cols-2">
                 {data.members.filter((m) => m.birthday).map((b) => (
                   <div key={b.id} className="app-surface flex items-center gap-4 rounded-2xl p-4">
                     <img src={b.avatar} alt={b.name} className="h-12 w-12 rounded-full object-cover" />
                     <div>
-                      <h3 className="font-medium text-stone-100">{b.name}</h3>
+                      <h3 className="font-medium ">{b.name}</h3>
                       <p className="text-sm text-stone-500">{b.birthday}</p>
                     </div>
                   </div>
@@ -225,11 +225,11 @@ export function Events() {
 
       <Modal open={showAdd} onClose={() => setShowAdd(false)} title="Add Family Event">
         <div className="space-y-4">
-          <input placeholder="Event title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="w-full rounded-xl border border-white/10 bg-[#0a0a0a] px-4 py-3 text-stone-200 focus:outline-none focus:ring-1 focus:ring-white/20" />
-          <input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} className="w-full rounded-xl border border-white/10 bg-[#0a0a0a] px-4 py-3 text-stone-200 focus:outline-none focus:ring-1 focus:ring-white/20" />
-          <input placeholder="Time (optional)" value={form.time} onChange={(e) => setForm({ ...form, time: e.target.value })} className="w-full rounded-xl border border-white/10 bg-[#0a0a0a] px-4 py-3 text-stone-200 focus:outline-none focus:ring-1 focus:ring-white/20" />
-          <input placeholder="Location (optional)" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} className="w-full rounded-xl border border-white/10 bg-[#0a0a0a] px-4 py-3 text-stone-200 focus:outline-none focus:ring-1 focus:ring-white/20" />
-          <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value as FamilyEvent['type'] })} className="w-full rounded-xl border border-white/10 bg-[#0a0a0a] px-4 py-3 text-stone-200 focus:outline-none focus:ring-1 focus:ring-white/20">
+          <input placeholder="Event title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} className="fam-input" />
+          <input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} className="fam-input" />
+          <input placeholder="Time (optional)" value={form.time} onChange={(e) => setForm({ ...form, time: e.target.value })} className="fam-input" />
+          <input placeholder="Location (optional)" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} className="fam-input" />
+          <select value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value as FamilyEvent['type'] })} className="fam-input">
             <option value="gathering">Gathering</option>
             <option value="birthday">Birthday</option>
             <option value="anniversary">Anniversary</option>

@@ -44,7 +44,8 @@ export function HorizontalScroll({ children, className = '', showArrows = true, 
             aria-label="Scroll left"
             onClick={() => scroll(-1)}
             disabled={!canLeft}
-            className="absolute left-0 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-[#111]/90 text-stone-300 backdrop-blur-sm transition hover:bg-[#161618] disabled:opacity-0 md:flex"
+            className="absolute left-0 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border backdrop-blur-sm transition disabled:opacity-0 md:flex"
+            style={{ borderColor: 'var(--border)', background: 'var(--elevated)', color: 'var(--text)' }}
           >
             ←
           </button>
@@ -53,7 +54,8 @@ export function HorizontalScroll({ children, className = '', showArrows = true, 
             aria-label="Scroll right"
             onClick={() => scroll(1)}
             disabled={!canRight}
-            className="absolute right-0 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-[#111]/90 text-stone-300 backdrop-blur-sm transition hover:bg-[#161618] disabled:opacity-0 md:flex"
+            className="absolute right-0 top-1/2 z-10 hidden h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border backdrop-blur-sm transition disabled:opacity-0 md:flex"
+            style={{ borderColor: 'var(--border)', background: 'var(--elevated)', color: 'var(--text)' }}
           >
             →
           </button>

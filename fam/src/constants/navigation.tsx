@@ -73,7 +73,47 @@ function UsersIcon({ className }: { className?: string }) {
   );
 }
 
-export { HomeIcon, FeedIcon, CalendarIcon, AlbumIcon, MessageIcon, BellIcon, SettingsIcon, UsersIcon };
+function RootsIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3v8m0 0c-3 4-6 6-8 8m8-8c3 4 6 6 8 8M8 9h8" />
+    </svg>
+  );
+}
+
+function TreeIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 21V11m0 0L7 7m5 4l5-4M7 7V4m10 3V4M12 21H8m4 0h4" />
+    </svg>
+  );
+}
+
+function TimelineIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 2m6-2a9 9 0 11-18 0 9 9 0 0118 0z" />
+    </svg>
+  );
+}
+
+function InviteIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l9 6 9-6M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+    </svg>
+  );
+}
+
+function GlobeIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 3a9 9 0 100 18 9 9 0 000-18zm0 0c2.5 2.4 4 5.6 4 9s-1.5 6.6-4 9m0-18c-2.5 2.4-4 5.6-4 9s1.5 6.6 4 9M3.5 9h17m-17 6h17" />
+    </svg>
+  );
+}
+
+export { HomeIcon, FeedIcon, CalendarIcon, AlbumIcon, MessageIcon, BellIcon, SettingsIcon, UsersIcon, RootsIcon, TreeIcon, TimelineIcon, InviteIcon, GlobeIcon };
 
 export const APP_NAV_ITEMS: NavItem[] = [
   { path: '/dashboard', label: 'Home', icon: HomeIcon, tourId: 'nav-home' },

@@ -175,13 +175,14 @@ export function GuidedWalkthrough() {
                 type="button"
                 onClick={() => setStep(s.id)}
                 className={`flex w-full gap-4 rounded-xl px-4 py-4 text-left transition ${
-                  step === s.id ? 'bg-white/[0.06] ring-1 ring-white/[0.08]' : 'hover:bg-white/[0.03]'
+                  step === s.id ? 'ring-1' : ''
                 }`}
+                style={step === s.id ? { background: 'var(--primary-soft)', ['--tw-ring-color' as string]: 'var(--border)' } : undefined}
               >
-                <span className={`text-sm font-medium ${step === s.id ? 'text-violet-400' : 'text-stone-600'}`}>{s.num}</span>
+                    <span className={`text-sm font-medium ${step === s.id ? 'text-[var(--primary)]' : 'fam-muted'}`}>{s.num}</span>
                 <div>
-                  <p className={`text-sm font-medium ${step === s.id ? 'text-stone-100' : 'text-stone-400'}`}>{s.title}</p>
-                  <p className="text-xs text-stone-600">{s.subtitle}</p>
+                  <p className={`text-sm font-medium ${step === s.id ? '' : 'fam-muted'}`}>{s.title}</p>
+                  <p className="text-xs fam-muted">{s.subtitle}</p>
                 </div>
               </button>
             ))}

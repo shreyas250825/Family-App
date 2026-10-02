@@ -72,9 +72,12 @@ export function Albums() {
               key={cat.id}
               type="button"
               onClick={() => setActiveCategory(cat.id)}
-              className={`rounded-xl px-4 py-2 text-sm font-medium transition ${
-                activeCategory === cat.id ? 'bg-stone-100 text-[#0a0a0a]' : 'border border-white/[0.06] text-stone-400 hover:text-stone-200'
-              }`}
+              className="rounded-xl px-4 py-2 text-sm font-medium transition"
+              style={{
+                background: activeCategory === cat.id ? 'var(--primary)' : 'transparent',
+                color: activeCategory === cat.id ? '#fff' : 'var(--muted)',
+                border: activeCategory === cat.id ? 'none' : '1px solid var(--border)',
+              }}
             >
               {cat.label}
             </button>
@@ -85,9 +88,9 @@ export function Albums() {
         </button>
       </div>
 
-      <div className="mb-8 flex gap-8 rounded-2xl border border-white/[0.06] bg-[#0B0B0D] p-4">
-        <div><span className="text-2xl font-medium text-stone-100">{albums.length}</span><span className="ml-2 text-sm text-stone-500">Albums</span></div>
-        <div><span className="text-2xl font-medium text-stone-100">{totalPhotos}</span><span className="ml-2 text-sm text-stone-500">Photos</span></div>
+      <div className="fam-card mb-8 flex gap-8 p-4">
+        <div><span className="text-2xl font-medium">{albums.length}</span><span className="ml-2 text-sm fam-muted">Albums</span></div>
+        <div><span className="text-2xl font-medium">{totalPhotos}</span><span className="ml-2 text-sm fam-muted">Photos</span></div>
       </div>
 
       <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
@@ -96,7 +99,7 @@ export function Albums() {
             key={album.id}
             type="button"
             onClick={() => setViewAlbum(album)}
-            className="group overflow-hidden rounded-2xl border border-white/[0.06] bg-[#0B0B0D] text-left transition hover:border-white/10"
+            className="fam-card group overflow-hidden text-left"
           >
             <div className="relative h-52 overflow-hidden">
               <img src={album.cover} alt={album.title} className="h-full w-full object-cover transition duration-500 group-hover:scale-105" loading="lazy" />
@@ -112,8 +115,8 @@ export function Albums() {
 
       <Modal open={showCreate} onClose={() => setShowCreate(false)} title="Create Album">
         <div className="space-y-4">
-          <input placeholder="Album title" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} className="w-full rounded-xl border border-white/10 bg-[#0a0a0a] px-4 py-3 text-stone-200 focus:outline-none focus:ring-1 focus:ring-white/20" />
-          <select value={newCategory} onChange={(e) => setNewCategory(e.target.value as StoredAlbum['category'])} className="w-full rounded-xl border border-white/10 bg-[#0a0a0a] px-4 py-3 text-stone-200">
+          <input placeholder="Album title" value={newTitle} onChange={(e) => setNewTitle(e.target.value)} className="fam-input" />
+          <select value={newCategory} onChange={(e) => setNewCategory(e.target.value as StoredAlbum['category'])} className="fam-input">
             <option value="general">General</option>
             <option value="vacation">Vacation</option>
             <option value="birthday">Birthday</option>

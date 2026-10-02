@@ -2,6 +2,7 @@ import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { AppLayout } from '../components/layout/AppLayout';
 import { Modal } from '../components/ui/Modal';
+import { ThemeSelector } from '../components/family/ThemeSelector';
 import { useFamZee } from '../context/FamZeeContext';
 
 export function Settings() {
@@ -37,56 +38,60 @@ export function Settings() {
   };
 
   return (
-    <AppLayout title="Settings">
+    <AppLayout title="Profile / Settings">
       <div className="max-w-2xl space-y-6">
-        <div className="app-surface p-6 flex items-center gap-5">
+        <div className="fam-card flex items-center gap-5 p-6">
           <div className="relative">
-            <img src={user?.avatar} alt="" className="w-20 h-20 rounded-full object-cover ring-2 ring-neutral-100" />
+            <img src={user?.avatar} alt="" className="h-20 w-20 rounded-full object-cover" />
             <button
+              type="button"
               onClick={() => avatarRef.current?.click()}
-              className="absolute bottom-0 right-0 w-7 h-7 bg-neutral-900 text-white rounded-full text-xs flex items-center justify-center"
+              className="absolute bottom-0 right-0 flex h-7 w-7 items-center justify-center rounded-full text-xs text-white"
+              style={{ background: 'var(--primary)' }}
             >
               +
             </button>
             <input ref={avatarRef} type="file" accept="image/*" className="hidden" onChange={handleAvatar} />
           </div>
           <div className="flex-1">
-            <h2 className="text-xl font-medium text-stone-100">{user?.name}</h2>
-            <p className="text-neutral-500 text-sm">{user?.email}</p>
+            <h2 className="text-xl font-medium">{user?.name}</h2>
+            <p className="text-sm fam-muted">{user?.email}</p>
           </div>
           <button
+            type="button"
             onClick={() => { setName(user?.name || ''); setEditOpen(true); }}
-            className="px-4 py-2 rounded-lg border border-neutral-200 text-sm font-semibold text-neutral-600 hover:bg-neutral-50"
+            className="fam-btn"
           >
             Edit
           </button>
         </div>
 
-        <div className="app-surface p-6">
-          <h3 className="font-medium text-stone-100 mb-4">Your family</h3>
-          <p className="text-neutral-700 font-medium">{data.family.name}</p>
-          <p className="text-sm text-neutral-500 mt-1">
+        <div className="fam-card p-6">
+          <h3 className="mb-4 font-medium">Theme</h3>
+          <ThemeSelector />
+        </div>
+
+        <div className="fam-card p-6">
+          <h3 className="mb-4 font-medium">Your family</h3>
+          <p className="font-medium">{data.family.name}</p>
+          <p className="mt-1 text-sm fam-muted">
             {data.members.length} member{data.members.length !== 1 ? 's' : ''} · {data.family.stats.photos} photos · {data.events.length} events
           </p>
         </div>
 
-        <div className="app-surface p-6 space-y-3">
-          <button onClick={handleLogout} className="w-full py-3 bg-neutral-900 text-white rounded-xl font-semibold hover:bg-neutral-800 transition-colors">
+        <div className="fam-card space-y-3 p-6">
+          <button type="button" onClick={handleLogout} className="fam-btn-primary w-full py-3">
             Sign out
           </button>
-          <button onClick={handleDelete} className="w-full py-3 border border-red-200 text-red-600 rounded-xl font-semibold hover:bg-red-50 transition-colors">
+          <button type="button" onClick={handleDelete} className="w-full rounded-xl border border-red-300 py-3 font-semibold text-red-600">
             Delete account
           </button>
         </div>
       </div>
 
       <Modal open={editOpen} onClose={() => setEditOpen(false)} title="Edit profile">
-        <input
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          className="w-full px-4 py-3 rounded-lg border border-neutral-200 mb-4 focus:outline-none focus:ring-2 focus:ring-neutral-900/10"
-        />
-        <button onClick={handleSaveProfile} className="w-full py-3 bg-neutral-900 text-white rounded-xl font-semibold">Save changes</button>
+        <input value={name} onChange={(e) => setName(e.target.value)} className="fam-input mb-4" />
+        <button type="button" onClick={handleSaveProfile} className="fam-btn-primary w-full py-3">Save changes</button>
       </Modal>
     </AppLayout>
   );

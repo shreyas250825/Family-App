@@ -3,16 +3,16 @@ import { FeedCard } from '../components/family/FeedCard';
 import { PostComposer } from '../components/family/PostComposer';
 import { useDemoFamily } from '../context/DemoFamilyContext';
 
-export function Feed() {
+export function PublicFeed() {
   const { posts, reactions, reactToPost } = useDemoFamily();
-  const familyPosts = posts.filter((p) => p.audience !== 'public');
+  const publicPosts = posts.filter((p) => p.audience === 'public');
 
   return (
-    <AppLayout title="Family Feed">
-      <p className="mb-6 max-w-xl text-sm fam-muted">Family-only posts, memories, photos, and updates. Public posts live on a separate feed.</p>
+    <AppLayout title="Public Feed">
+      <p className="mb-6 max-w-xl text-sm fam-muted">Posts marked public. Family memories stay on Family Feed unless you choose otherwise.</p>
       <div className="mx-auto max-w-xl space-y-5">
-        <PostComposer defaultAudience="family" />
-        {familyPosts.map((post) => (
+        <PostComposer defaultAudience="public" />
+        {publicPosts.map((post) => (
           <FeedCard key={post.id} post={post} selectedReaction={reactions[post.id] || null} onReact={(kind) => reactToPost(post.id, kind)} />
         ))}
       </div>
